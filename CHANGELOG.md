@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2026-09-28
 
+### Changed
+
+- **Licença MIT**, a mesma do Orkastery, com titular Julio Pessoa, no lugar da Apache 2.0.
+- README canônico em inglês, com espelho em `README.pt-BR.md`, e CONTRIBUTING, SECURITY e
+  CODE_OF_CONDUCT no padrão do Orkastery.
+- URLs do projeto apontam para `github.com/orkastery/orkmind` e para `orkmind.com`.
+
 ### Added
 
 - **Memory Provider nativo (`orkmind.memory_provider`, extra
@@ -175,7 +182,7 @@ sem a correcao.
 - sdist com lista fechada de arquivos: fica de fora o material interno
   (estado do Orkastery, relatórios, planos, auditorias, benchmark) e o plugin do
   OpenClaw. Sai o classificador de licença, porque a licença já vai como
-  expressão SPDX (`License-Expression: Apache-2.0`).
+  expressão SPDX (`License-Expression: MIT`).
 - Os módulos de teste do Company Brain que exigem banco levam a marca
   `integration`; sem banco eles continuam falhando, de propósito.
 - DSN padrão do plugin Hermes sem senha no código. Exemplos, docs e testes

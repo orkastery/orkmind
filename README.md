@@ -1,194 +1,130 @@
 # OrkMind
 
-**Semantic memory layer for AI agents.** OrkMind offloads memory from constrained agent
-instruction files (MEMORY.md, AGENTS.md, CLAUDE.md) into a structured, typed store with
-deterministic tag-based retrieval and mandatory rule injection.
+**English** · [Português](README.pt-BR.md)
 
-**Status: v0.3.0 - Fase 2.5 (Contexto por camadas + recuperacao + autonomia controlada) entregue** -
-220 testes, camadas E1/E2/E3 com progressive loading, snapshots globais, encryption at-rest
-seletivo (AES-256-GCM), extracao automatica com guardrail de 3 camadas, busca semantica com
-rerank RRF. Inclui toda a Fase 2 (governanca, protecao, anti-injection, conflitos, DAG).
-Ver [CHANGELOG](CHANGELOG.md).
+[![PyPI](https://img.shields.io/pypi/v/orkmind)](https://pypi.org/project/orkmind/) [![MIT license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-## Architecture
+> **In one sentence:** OrkMind is typed, governed memory for AI agents: the rules that matter
+> always reach the model, retrieval is deterministic, and history is never rewritten.
+
+- **Status:** 0.3.0, alpha · on PyPI as [`orkmind`](https://pypi.org/project/orkmind/) ·
+  [changes per version](CHANGELOG.md)
+- **Proof:** CI on every pull request runs the test suite without a database on Python 3.11 and
+  3.12, checks the sdist and the wheel, and tests the OpenClaw plugin.
+- **Project:** open source under the MIT license, maintained by [Orkastery](https://github.com/orkastery),
+  contributions by pull request ([CONTRIBUTING](CONTRIBUTING.md)).
+- **Language:** this page is the canonical entry point, mirrored in [Portuguese](README.pt-BR.md);
+  part of the docs and the code comments are in Brazilian Portuguese today.
+
+```bash
+pip install "orkmind>=0.3.0"
+bash scripts/setup_postgres.sh        # PostgreSQL + pgvector in Docker (or bring your own)
+export ORKMIND_DATABASE_URL="postgresql://orkmind:<password>@localhost:5432/orkmind"
+orkmind add --collection rule --content "Never run rm -rf in production" \
+  --tags '{"skill": ["deploy"]}' --mandatory
+orkmind search --tags '{"skill": ["deploy"]}'
+```
+
+## Why it exists
+
+- Agents keep their memory in instruction files (`AGENTS.md`, `CLAUDE.md`, `MEMORY.md`) that
+  grow until the important rule gets lost in the middle.
+- Embedding search is probabilistic: the safety rule you need on this turn may simply not rank.
+- **OrkMind moves that memory into a typed store** with deterministic, tag-based retrieval, and
+  rules marked `mandatory` are always returned when their tags match the context.
+
+## How it works
 
 ```mermaid
 flowchart TD
     subgraph Runtimes
         CC[Claude Code]
         HM[Hermes Agent]
+        OC[OpenClaw]
         CL[orkmind CLI]
     end
 
-    CC -->|MCP stdio| MCP[MCP Server<br/>7 tools]
-    HM -->|MemoryProvider| HP[Hermes Provider]
+    CC -->|MCP stdio| MCP[MCP server<br/>10 tools]
+    HM -->|MemoryProvider plugin| SL
+    OC -->|memory plugin| SL
     CL --> SL
-
     MCP --> SL[SemanticLayer<br/>23 collections &#x2022; 11 tag dimensions]
-    HP --> SL
 
-    SL -->|exact tag search &#43; semantic| MS[MemoryStore ABC]
-    MS --> PG[(PostgreSQL &#43; pgvector)]
-
-    SL --> DET[Context Detectors<br/>Keyword &#43; File path]
-    DET -->|inferred tags| SL
-
-    style PG fill:#336791,stroke:#fff,color:#fff
-    style SL fill:#2563eb,stroke:#fff,color:#fff
-    style MCP fill:#10b981,stroke:#fff,color:#fff
+    SL -->|exact tag search &#43; optional semantic| GS[GovernedStore<br/>protection, ACL, versioning]
+    GS --> MS[(PostgreSQL &#43; pgvector<br/>default backend)]
 ```
 
-## Key Concepts
+## Key concepts
 
-- **23 typed collections**: rule, instruction, fact, learning, preference, decision,
-  content, agenda, contacts, handoff, roadmap, files, docs, dags, tools, users,
-  artifact, compliance, semantic_log, session, product, project, initiative
-- **11 semantic tag dimensions**: skill, agent, domain, project, situation, person, audience,
-  editors, prod, proj, init. The legacy `project` dimension remains the physical tenant/workspace;
-  `prod`, `proj` and `init` model the business portfolio without widening access.
-- **Deterministic tag search**: exact match on tags, not probabilistic embedding search
-- **Mandatory injection**: entries with `mandatory: true` are ALWAYS returned when their
-  tags match the query context
-- **Token budget**: the semantic layer respects a configurable token budget, prioritizing
-  critical and mandatory entries
-- **Rule protection (D2)**: entries `protected`/`priority: critical` reject agent
-  edits/deletes - only human-authenticated sources can modify
-- **Append-only versioning (D3)**: full history via `memory_versions` table with
-  LRU-based garbage collection
-- **Anti-injection (D4)**: 5-category detection, suspicious entries retained but
-  excluded from automatic injection; SHA-256 content integrity
-- **Conflict detection (D5)**: mandatory entries with overlapping tags flagged and
-  blocked from injection until human review
-- **DAG engine (D1)**: in-memory directed graph with topological sort and cycle
-  detection for rule dependency analysis
-- **Context layers E1/E2/E3 (D6)**: progressive loading by fidelity - Essence
-  (~100 tokens), Structure (~2k tokens), Source (full). Mandatory entries always
-  loaded at E3
-- **Global snapshots (D7)**: commit/log/show/diff/restore of the entire memory
-  tree with embeddings preserved
-- **Encryption at-rest (D8)**: optional, selective AES-256-GCM envelope encryption
-  for sensitive collections (contacts, files, docs)
-- **Session extraction (D9)**: automatic memory extraction into soft collections
-  with 3-layer guardrail (prompt + post-parse + ontology validation)
-- **Semantic search + RRF rerank (D10)**: optional intent-based search combining
-  FTS + vector with Reciprocal Rank Fusion, keeping deterministic `find()` intact
+- **23 typed collections:** rule, instruction, fact, learning, preference, decision, content,
+  agenda, contacts, handoff, roadmap, files, docs, dags, tools, users, artifact, compliance,
+  semantic_log, session, product, project, initiative.
+- **11 tag dimensions:** skill, agent, domain, project, situation, person, audience, editors, prod,
+  proj, init. `project` stays the physical workspace; `prod`, `proj` and `init` model the business
+  portfolio without widening access.
+- **Deterministic retrieval:** exact match on tags. Semantic search (FTS + vector, fused with RRF)
+  is optional and additive, never a replacement.
+- **Mandatory injection:** entries with `mandatory: true` are always returned when their tags match.
+- **Token budget:** the semantic layer respects a configurable budget and loads critical and
+  mandatory entries first.
+- **Protection:** `protected` and `priority: critical` entries reject agent edits and deletes;
+  only human-authenticated sources can change them.
+- **Append-only history:** full version history in `memory_versions`.
+- **Anti-injection:** suspicious content is kept but excluded from automatic injection, with
+  SHA-256 content integrity.
+- **Conflict detection:** mandatory entries with overlapping tags are held for human review.
+- **Context layers:** progressive loading by fidelity (essence, structure, source).
+- **Snapshots:** commit, log, diff and restore of the whole memory tree.
+- **Encryption at rest:** optional AES-256-GCM for sensitive collections.
 
-## Quick Start
-
-### Install
+## Quick start
 
 ```bash
-pip install -e .
+pip install "orkmind>=0.3.0"
+
+# PostgreSQL + pgvector with the helper script (requires Docker)
+bash scripts/setup_postgres.sh
+# or on an existing server
+createdb orkmind
+psql orkmind -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
-### Configure
-
-Set the database URL:
-
-```bash
-export ORKMIND_DATABASE_URL="postgresql://orkmind:senha-de-teste@localhost:5432/orkmind"
-```
-
-Or create `~/.orkmind/config.toml`:
+Point OrkMind at the database with `ORKMIND_DATABASE_URL`, or with `~/.orkmind/config.toml`:
 
 ```toml
 [store]
-backend = "pgvector"                                          # default
-database_url = "postgresql://orkmind:senha-de-teste@localhost:5432/orkmind"
+backend = "pgvector"                                     # default
+database_url = "postgresql://orkmind:<password>@localhost:5432/orkmind"
 
 [server]
 log_level = "INFO"
 token_budget = 4000
 ```
 
-### Storage backends
-
-OrkMind separates **persisting** from **governing**. The backend stores and
-returns bytes; governance (entry protection, ACL, versioning, constitutional
-ordering) runs in a layer above, identical for every backend. Switching
-backends changes where data lives, never what the product guarantees.
-
-| Backend | When to use | Trade-off |
-|---------|-------------|-----------|
-| `pgvector` (default) | Production. Nothing to change on existing installs. | None. It is the reference. |
-| `memory` | Tests, local development, CI without external services. | Volatile: data dies with the process. Never a default. |
-| `qdrant` | You already run Qdrant and want a dedicated vector engine. | No unique index for `(collection, content_hash)`, so idempotency is best-effort and declared. |
-
 ```bash
-export ORKMIND_STORE_BACKEND=qdrant
-export ORKMIND_STORE_OPTIONS='{"url": "http://localhost:6333"}'
-pip install "orkmind[qdrant]"
-
-orkmind store info          # active backend, capabilities and active warnings
-```
-
-Every degradation is declared in `StoreCapabilities` and printed by
-`orkmind store info` -- never silent. Full matrix in
-[`docs/storage-backends/MATRIZ-BACKENDS.md`](docs/storage-backends/MATRIZ-BACKENDS.md),
-configuration and migration guide in
-[`docs/storage-backends/GUIA-BACKENDS.md`](docs/storage-backends/GUIA-BACKENDS.md).
-
-### Set Up PostgreSQL
-
-```bash
-# Using the helper script (requires Docker):
-bash scripts/setup_postgres.sh
-
-# Or manually:
-createdb orkmind
-psql orkmind -c "CREATE EXTENSION IF NOT EXISTS vector;"
-```
-
-### CLI Usage
-
-```bash
-# Add a memory
-orkmind add --collection rule --content "Never use rm -rf in production" \
+orkmind add --collection rule --content "Never run rm -rf in production" \
   --tags '{"skill": ["deploy"], "domain": ["infra"]}' --mandatory
-
-# List memories
 orkmind list --collection rule
-
-# Search by tags
 orkmind search --tags '{"skill": ["deploy"]}'
-
-# Detect context from conversation
 orkmind detect --text "Let's deploy the terraform changes"
-
-# Statistics
 orkmind stats
-
-# Add idempotently (returns the existing id instead of duplicating)
-orkmind add --collection content --content "relatorio semanal" --dedupe --json
+orkmind add --collection content --content "weekly report" --dedupe --json   # idempotent
 ```
 
-### Guaranteed Writes (spool + drainer)
+## Integrations
 
-Agent and cron content must never be lost, even when the execution tools
-are missing from a job toolset or the backend is momentarily down. The
-write path stages to a durable on-disk queue first, then reconciles:
+| Integration | How it connects | Rules on every turn |
+| --- | --- | --- |
+| Hermes | MemoryProvider plugin ([setup](docs/hermes-setup.md)) | yes, unconditional injection |
+| OpenClaw | memory plugin in `integrations/openclaw` | yes, unconditional injection |
+| Claude Code, Codex and any MCP client | `python -m orkmind.mcp` ([setup](docs/mcp-setup.md)) | on demand, through the tools |
+| CLI | `orkmind` | on demand |
 
-```bash
-# Serve the local idempotent write API (loopback only, token required)
-export ORKMIND_API_TOKEN="<token>"
-orkmind api --port 8077
+The MCP server and the CLI never build a model prompt, so they expose the same rules on demand
+instead of injecting them. Only the two prompt-building plugins guarantee that governance reaches
+the model on every turn, and both are covered by the benchmark below.
 
-# Drain the queue once (cron), or continuously
-.venv/bin/python scripts/orkmind_drain.py --once
-.venv/bin/python scripts/orkmind_drain.py --watch --interval 60
-
-# Inspect the queue without writing anything
-.venv/bin/python scripts/orkmind_drain.py --status
-```
-
-Idempotency is keyed on `content_hash` (SHA-256) and enforced by a
-partial unique index on `memories(collection, content_hash)`, so
-reprocessing the queue never duplicates memory. See
-[docs/sempre-gravar.md](docs/sempre-gravar.md).
-
-### MCP Server (Claude Code)
-
-Add to your Claude Code MCP settings:
+MCP configuration for Claude Code:
 
 ```json
 {
@@ -196,84 +132,92 @@ Add to your Claude Code MCP settings:
     "orkmind": {
       "command": "python",
       "args": ["-m", "orkmind.mcp"],
-      "env": {
-        "ORKMIND_DATABASE_URL": "postgresql://orkmind:senha-de-teste@localhost:5432/orkmind"
-      }
+      "env": { "ORKMIND_DATABASE_URL": "postgresql://orkmind:<password>@localhost:5432/orkmind" }
     }
   }
 }
 ```
 
-## Native Memory Provider
+## Storage backends
 
-`orkmind.memory_provider` is a separate, **async** package (asyncpg) for any person, company
-or agent stack that needs a full memory stack rather than the rule-injection layer above: three tiers
-(Core / Recall / Wiki), a navigable meta-index, hybrid dense + lexical retrieval fused with
-RRF in SQL, deterministic RBAC pre-filtering, and idempotent document ingestion. It runs
-directly on PostgreSQL + pgvector and never compacts history: the per-turn context is bounded
-by construction, and the database itself rejects `UPDATE`/`DELETE` on the history tables.
+OrkMind separates **persisting** from **governing**. A backend stores and returns bytes;
+protection, ACL, versioning and ordering run in one layer above it, identical for every backend.
+
+| Backend | When to use | Trade-off |
+| --- | --- | --- |
+| `pgvector` (default) | Production | None. It is the reference |
+| `memory` | Tests, local development, CI | Volatile: data dies with the process |
+| `qdrant` | You already run Qdrant | Experimental; idempotency is best-effort and declared |
+
+Every degradation is declared in `StoreCapabilities` and printed by `orkmind store info`, never
+silent. See the [backend guide](docs/storage-backends/GUIA-BACKENDS.md) and the
+[capability matrix](docs/storage-backends/MATRIZ-BACKENDS.md).
+
+## Guaranteed writes
+
+Content written by agents and cron jobs is staged in a durable on-disk queue first and then
+reconciled, so it survives a missing tool or a database that is briefly down. Idempotency is
+keyed on the SHA-256 `content_hash` and enforced by a unique index, so replaying the queue never
+duplicates memory.
 
 ```bash
-pip install 'orkmind[memory-provider]'
-export ORKMIND_PROVIDER_DATABASE_URL=postgresql://user:pass@localhost:5433/memory_provider
+export ORKMIND_API_TOKEN="<token>"
+orkmind api --port 8077                           # local idempotent write API, loopback only
+python scripts/orkmind_drain.py --once            # drain the queue once (cron)
+python scripts/orkmind_drain.py --status          # inspect it without writing
+```
+
+Details in [docs/sempre-gravar.md](docs/sempre-gravar.md).
+
+## Native Memory Provider
+
+`orkmind.memory_provider` is a separate async package for stacks that need a full memory rather
+than the rule layer above: three tiers (Core, Recall, Wiki), hybrid dense and lexical retrieval
+fused with RRF in SQL, deterministic RBAC pre-filtering, and idempotent ingestion of whole
+documents (Markdown with wikilinks and frontmatter, text, CSV, PDF, DOCX). The database rejects
+`UPDATE` and `DELETE` on the history tables, and an MCP server
+(`python -m orkmind.memory_provider.mcp`) exposes `memory_search` and `memory_get`.
+
+```bash
+pip install "orkmind[memory-provider]>=0.3.0"
+export ORKMIND_PROVIDER_DATABASE_URL=postgresql://user:<password>@localhost:5433/memory_provider
 python examples/memory_provider.py
 ```
 
-It ingests **whole documents** -- Markdown with wikilinks and frontmatter, plain text, CSV,
-PDF and DOCX -- and keeps the web between them: `[[wikilinks]]`, backlinks with the citing
-excerpt, links to notes that do not exist yet (which resolve themselves once the note is
-written), and hierarchical tags where `rede` also matches `rede/backbone`. Point it at a
-folder with `ingest_vault()` and it walks the whole thing.
-
-It ships an **MCP server** (`python -m orkmind.memory_provider.mcp`), so any MCP-speaking
-runtime -- Claude Code, OpenClaw, Codex -- gets `memory_search` / `memory_get` over this store.
-Identity is resolved once from the environment, never from a tool argument, so the model
-cannot pick its own role.
-
-It shares the `EmbeddingProvider` contract with the rest of OrkMind but not the store: it has
-its own schema and does not go through `MemoryStore`/`GovernedStore`.
 See [docs/memory-provider/README.md](docs/memory-provider/README.md).
 
 ## Development
 
 ```bash
-# Install dev dependencies
 pip install -e ".[dev]"
-
-# Run tests
-pytest
-
-# Lint
-ruff check .
-
-# Type check
-mypy src/
+pytest -m "not integration"      # what CI runs, no database needed
+pytest                           # the full suite; needs ORKMIND_TEST_DATABASE_URL with "test" in the name
 ```
 
-## Design Decisions
+The integration tests erase the database they point at, so the test guard only accepts a
+database whose name marks it as a test database.
+
+## Design decisions
 
 | Decision | Rationale |
-|----------|-----------|
-| **PostgreSQL + pgvector** as the default backend | Single dependency with proven reliability. Supports exact tag search (GIN indexes), full-text search (tsvector), and vector similarity in one engine. `memory` and `qdrant` are also available; pgvector stays the default so existing installs need no change. |
-| **Governance above the adapter, not inside it** | A backend persists; OrkMind governs. Protection, ACL, versioning and constitutional ordering live in one place (`GovernedStore`), so the same guarantees hold on every backend and a new adapter cannot quietly weaken them. |
-| **Deterministic tag search over embeddings** | Agent memory retrieval must be predictable. Tag-based exact match ensures rules and mandatory entries are always found. Semantic (vector) search is additive, not primary. |
-| **23 typed collections** | Each collection has distinct validation rules and lifecycle semantics (`rule` vs `learning` vs `handoff`). Strong typing prevents the "everything in one bucket" anti-pattern. |
-| **8 tag dimensions** (skill, agent, domain, project, situation, person, audience, editors) | Captures the essential context axes for multi-agent systems. Tags are AND-matched within a dimension, enabling precise scoping. |
-| **Mandatory injection** | Entries marked `mandatory: true` bypass ranking and are always included when tags match. Critical for safety rules and governance policies. |
-| **Token budget** | SemanticLayer respects a configurable token limit, prioritizing critical/mandatory entries, so agents don't exceed their context window. |
-| **MCP (stdio) + Hermes MemoryProvider** | Two integration paths cover the two dominant agent runtimes. MCP for Claude Code, MemoryProvider for Hermes -- both are thin adapters over SemanticLayer. |
+| --- | --- |
+| **PostgreSQL + pgvector by default** | One dependency that does exact tag search (GIN), full-text search and vector similarity. |
+| **Governance above the adapter** | Protection, ACL, versioning and ordering live in `GovernedStore`, so a new backend cannot quietly weaken them. |
+| **Deterministic tags over embeddings** | Retrieval of rules must be predictable. Semantic search is additive, never primary. |
+| **23 typed collections** | Each has its own validation and lifecycle (`rule` is not `learning` is not `handoff`). |
+| **11 tag dimensions** | The context axes of multi-agent systems, AND-matched within a dimension for precise scoping. |
+| **Mandatory injection and a token budget** | Safety rules bypass ranking, and the model's context window is respected. |
 
 ## Documentation
 
-- [Ontology Reference](docs/ontologia.md) -- 23 collections, 11 tag dimensions, validation
-- [Integration Guide](docs/integration-guide.md) -- Claude Code + Hermes setup
-- [MCP Setup](docs/mcp-setup.md) -- MCP server configuration for Claude Code
-- [Hermes Setup](docs/hermes-setup.md) -- Hermes MemoryProvider configuration
-- [Federated memory](docs/federation.md) -- per-project stores, shared recall and profile ACL
-- [Gravacao garantida](docs/sempre-gravar.md) -- spool, drainer, idempotent API
-- [Native Memory Provider](docs/memory-provider/README.md) -- Core/Recall/Wiki tiers, RRF hybrid search, RBAC, ingestion
-- [Benchmark](bench/README.md) -- method, metric definitions, and what it does not prove
-- [Changelog](CHANGELOG.md) -- Release history
+- [Ontology reference](docs/ontologia.md): collections, tag dimensions, validation
+- [Integration guide](docs/integration-guide.md): Claude Code and Hermes
+- [MCP setup](docs/mcp-setup.md) · [Hermes setup](docs/hermes-setup.md)
+- [Federated memory](docs/federation.md): per-project stores, shared recall and profile ACL
+- [Guaranteed writes](docs/sempre-gravar.md): spool, drainer, idempotent API
+- [Native Memory Provider](docs/memory-provider/README.md)
+- [Benchmark](bench/README.md): method, metrics, and what it does not prove
+- [Changelog](CHANGELOG.md)
 
 <!-- BENCH:INICIO (gerado por bench/run.py; nao editar a mao) -->
 ## Benchmark
@@ -316,6 +260,14 @@ the two prompt-building integrations can guarantee that governance
 reaches the model on every turn, and only those are benchmarked.
 <!-- BENCH:FIM -->
 
+## Project
+
+OrkMind is open source under the [MIT license](LICENSE), maintained by
+[Orkastery](https://github.com/orkastery). Contributions come in by pull request, with the
+evidence described in [CONTRIBUTING](CONTRIBUTING.md). Report vulnerabilities privately, as
+described in [SECURITY](SECURITY.md). The [code of conduct](CODE_OF_CONDUCT.md) applies to every
+space of the project.
+
 ## License
 
-[Apache 2.0](LICENSE)
+[MIT](LICENSE)
