@@ -1,0 +1,517 @@
+{
+  "descricao": "64 memorias irrelevantes de alto volume. Dao denominador honesto ao M4 e volume ao M1/M2: sem ruido na base, 'a regra apareceu no prompt' nao prova grande coisa.",
+  "memorias": [
+    {
+      "id": "ruido-000",
+      "content": "A reuniao semanal do time acontece as tercas as 10h.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-001",
+      "content": "O escritorio fica no terceiro andar do predio da esquina.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-002",
+      "content": "O dono prefere reunioes curtas, de no maximo 30 minutos.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-003",
+      "content": "O cafe da manha do escritorio e servido ate as 9h30.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-004",
+      "content": "Anotacao solta sobre um artigo de historia romana lido em julho.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-005",
+      "content": "O nome do gato do dono e Tobias.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-006",
+      "content": "O dono prefere ler documentacao em PDF em vez de HTML.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-007",
+      "content": "Consulta odontologica marcada para o dia 12.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-008",
+      "content": "A senha do wifi do escritorio muda todo primeiro dia do mes.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-009",
+      "content": "Resumo de um podcast sobre economia comportamental.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-010",
+      "content": "Descobri que o atalho de duplicar linha no editor e ctrl+d.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-011",
+      "content": "O supermercado mais proximo fecha as 22h.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-012",
+      "content": "O dono gosta de cafe curto, sem acucar.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-013",
+      "content": "Aniversario da irma no dia 27 de setembro.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-014",
+      "content": "Lista de filmes para assistir no fim de semana.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-015",
+      "content": "O carro esta com a revisao vencida desde maio.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-016",
+      "content": "Aprendi a diferenca entre join e rebase no git.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-017",
+      "content": "A academia abre as 6h nos dias uteis.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-018",
+      "content": "O dono prefere trabalhar de manha cedo.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-019",
+      "content": "Rascunho de uma ideia de conto sobre um farol abandonado.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-020",
+      "content": "A conta de luz vence todo dia 15.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-021",
+      "content": "Viagem para o litoral prevista para dezembro.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-022",
+      "content": "Entendi como funciona o cache de DNS local.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-023",
+      "content": "O time de futebol favorito do dono joga aos domingos.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-024",
+      "content": "O dono nao gosta de notificacao sonora.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-025",
+      "content": "Trecho de um livro sobre arquitetura de cidades.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-026",
+      "content": "A impressora do escritorio e uma laser monocromatica.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-027",
+      "content": "Renovacao do passaporte prevista para novembro.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-028",
+      "content": "Descobri que da para renomear branch remota sem deletar.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-029",
+      "content": "O plano de internet e de 500 megabits.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-030",
+      "content": "O dono prefere tema escuro em qualquer aplicacao.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-031",
+      "content": "Anotacao sobre uma receita de pao de fermentacao natural.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-032",
+      "content": "O onibus da linha 42 passa a cada 20 minutos.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-033",
+      "content": "Vacina da gripe marcada para abril.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-034",
+      "content": "Aprendi a usar find com exec sem travar o terminal.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-035",
+      "content": "A biblioteca municipal fecha aos domingos.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-036",
+      "content": "O dono prefere teclado mecanico com switch marrom.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-037",
+      "content": "Ideia de projeto pessoal sobre catalogo de plantas.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-038",
+      "content": "O cachorro do vizinho late toda madrugada.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-039",
+      "content": "Curso de fotografia comeca em outubro.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-040",
+      "content": "Entendi como funcionam os generators em Python.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-041",
+      "content": "O restaurante japones da rua de baixo abre so a noite.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-042",
+      "content": "O dono prefere resumos em topicos a texto corrido.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-043",
+      "content": "Notas de uma palestra sobre urbanismo.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-044",
+      "content": "A garantia do notebook vence em fevereiro.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-045",
+      "content": "Casamento de um amigo em janeiro.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-046",
+      "content": "Descobri o comando para listar portas em uso.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-047",
+      "content": "A padaria da esquina abre as 6h da manha.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-048",
+      "content": "O dono prefere videochamada com camera desligada.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-049",
+      "content": "Lista de podcasts sobre historia.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-050",
+      "content": "O aluguel vence todo dia 5.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-051",
+      "content": "Exame de rotina marcado para marco.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-052",
+      "content": "Aprendi a diferenca entre soft link e hard link.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-053",
+      "content": "O parque perto de casa tem pista de 1,2 quilometro.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-054",
+      "content": "O dono prefere caneta de ponta fina.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-055",
+      "content": "Rascunho de uma lista de presentes de fim de ano.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-056",
+      "content": "A farmacia 24h fica a tres quarteiroes.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-057",
+      "content": "Reuniao de condominio em agosto.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-058",
+      "content": "Entendi como o pager do terminal funciona.",
+      "collection": "learning",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-059",
+      "content": "O cinema mais proximo tem sessao as 19h.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-060",
+      "content": "O dono prefere mochila a mala de rodinha.",
+      "collection": "preference",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-061",
+      "content": "Anotacao sobre um documentario de oceanos.",
+      "collection": "content",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-062",
+      "content": "A conta de agua vem a cada dois meses.",
+      "collection": "fact",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    },
+    {
+      "id": "ruido-063",
+      "content": "Feira de livros no mes que vem.",
+      "collection": "agenda",
+      "priority": "low",
+      "mandatory": false,
+      "tags": {}
+    }
+  ]
+}

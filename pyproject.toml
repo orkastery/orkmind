@@ -1,0 +1,117 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "orkmind"
+version = "0.3.0"
+description = "Semantic memory layer for AI agents -- typed ontology, deterministic tag search, and mandatory rule injection."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+authors = [
+    { name = "Orkastery", email = "orkmind@orkastery.dev" },
+]
+keywords = ["ai", "agents", "memory", "semantic", "ontology", "mcp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "pydantic>=2.0",
+    "click>=8.0",
+    "mcp>=1.0",
+    "tomli>=2.0;python_version<'3.11'",
+    "psycopg[binary]>=3",
+    "pgvector>=0.3",
+    "numpy>=1.24",
+    "httpx>=0.25",
+]
+
+[project.optional-dependencies]
+hermes = ["hermes-agent"]
+encryption = ["cryptography>=43.0"]
+# Backend Qdrant (DP-1). Faixa fechada em <2 porque e API de terceiro em
+# evolucao. Nada sai de `dependencies`: psycopg e pgvector continuam
+# obrigatorios nesta leva (DP-7, divida D-1).
+qdrant = ["qdrant-client>=1.9,<2"]
+# Memory Provider nativo: pacote `orkmind.memory_provider`,
+# assincrono sobre asyncpg. Opcional pelo mesmo motivo do qdrant: quem usa so
+# o nucleo sincrono (psycopg) nao paga por isso.
+memory-provider = ["asyncpg>=0.29"]
+# Ingestao de documento de verdade: frontmatter YAML, PDF e DOCX. Sem isto
+# o provider so aceita texto ja extraido - continua funcionando, mas nao
+# substitui um vault.
+documents = ["pyyaml>=6", "pypdf>=5", "python-docx>=1.1"]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.5",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+orkmind = "orkmind.cli.main:cli"
+# Servidor MCP do Memory Provider nativo (extra `memory-provider`).
+orkmind-memory-mcp = "orkmind.memory_provider.mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/Orkastery/OrkMind"
+Repository = "https://github.com/Orkastery/OrkMind"
+Issues = "https://github.com/Orkastery/OrkMind/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/orkmind"]
+
+[tool.hatch.build.targets.sdist]
+# Lista fechada: o sdist leva o que compila e testa o pacote. Fica de fora o
+# material interno (estado do Orkastery, worktrees, AGENTS.md, orkastery.yaml,
+# relatorios de implementacao, planos, auditorias e dados de benchmark) e o
+# plugin do OpenClaw, que e um pacote npm a parte. O pyproject.toml entra sempre.
+only-include = [
+    "src/orkmind",
+    "tests",
+    "integrations/hermes",
+    "scripts",
+    "migrations",
+    "examples",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+]
+
+[tool.ruff]
+target-version = "py311"
+src = ["src", "tests"]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+mypy_path = "src"
+packages = ["orkmind"]
+
+[[tool.mypy.overrides]]
+# Bibliotecas de terceiros sem type stubs; nenhuma e obrigatoria no nucleo.
+module = ["asyncpg", "yaml", "pypdf", "docx", "charset_normalizer"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: requires external services (Postgres)",
+    "pgvector: exercita o backend pgvector (exige ORKMIND_TEST_DATABASE_URL)",
+    "memory: exercita o backend memory (sempre disponivel, sem servico)",
+    "qdrant: exercita o backend qdrant (exige ORKMIND_TEST_QDRANT_URL e ORKMIND_TEST_QDRANT_PREFIX)",
+    "governanca: invariante garantido pela camada de governanca, nao pelo adapter",
+    "memory_provider: exercita o Memory Provider nativo (exige ORKMIND_PROVIDER_TEST_DATABASE_URL)",
+]

@@ -1,0 +1,149 @@
+{
+  "id": "memory-orkmind",
+  "name": "Memory (OrkMind)",
+  "description": "Memoria semantica OrkMind via PostgreSQL + pgvector com busca vetorial",
+  "kind": "memory",
+  "activation": {
+    "onStartup": false
+  },
+  "contracts": {
+    "tools": [
+      "memory_search",
+      "memory_get",
+      "memory_recall",
+      "memory_store",
+      "memory_forget"
+    ]
+  },
+  "toolMetadata": {
+    "memory_search": {
+      "replaySafe": true
+    },
+    "memory_get": {
+      "replaySafe": true
+    },
+    "memory_recall": {
+      "replaySafe": true
+    }
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "databaseUrl": {
+        "type": "string",
+        "description": "DSN do PostgreSQL (ou usar env ORKMIND_DATABASE_URL)"
+      },
+      "embedding": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "type": "string",
+            "description": "Adaptador de embedding (ex: openai, openrouter)"
+          },
+          "model": {
+            "type": "string",
+            "description": "Modelo de embedding"
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "URL base da API de embedding (suporta ${ENV_VAR})"
+          },
+          "apiKey": {
+            "type": "string",
+            "description": "Chave de API para embedding (suporta ${ENV_VAR})"
+          },
+          "dimensions": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Dimensao dos vetores de embedding"
+          }
+        }
+      },
+      "autoRecall": {
+        "type": "boolean",
+        "description": "Recuperar memorias automaticamente antes de cada turno"
+      },
+      "autoCapture": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "string",
+            "enum": [
+              "smart"
+            ]
+          }
+        ],
+        "description": "Captura automatica: false (desligado), true (por triggers), 'smart' (classificador LLM)"
+      },
+      "smartCaptureModel": {
+        "type": "string",
+        "description": "Modelo LLM para classificacao no modo smart (padrao: z-ai/glm-5.3-flash)"
+      },
+      "recallMaxChars": {
+        "type": "integer",
+        "minimum": 100,
+        "maximum": 10000,
+        "description": "Limite de caracteres para consulta de recall"
+      },
+      "captureMaxChars": {
+        "type": "integer",
+        "minimum": 100,
+        "maximum": 10000,
+        "description": "Limite de caracteres para captura automatica"
+      },
+      "recallMaxResults": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 50,
+        "description": "Maximo de resultados retornados no recall"
+      },
+      "customTriggers": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "maxItems": 50,
+        "description": "Frases literais adicionais que ativam auto-capture"
+      },
+      "tokenBudget": {
+        "type": "integer",
+        "minimum": 500,
+        "maximum": 100000,
+        "description": "Budget de tokens do plugin; base do calculo do bloco de regras mandatorias (padrao: 4000)"
+      },
+      "mandatoryBudgetRatio": {
+        "type": "number",
+        "minimum": 0.1,
+        "maximum": 0.9,
+        "description": "Fracao do tokenBudget reservada as regras mandatorias (padrao: 0.3)"
+      },
+      "failSafe": {
+        "type": "boolean",
+        "description": "Emitir alerta explicito quando as regras mandatorias somem apos uma carga bem-sucedida (padrao: true)"
+      },
+      "rulesCacheTtlMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 3600000,
+        "description": "TTL do cache de regras mandatorias em ms; dentro do TTL nao ha consulta ao banco por turno (padrao: 60000)"
+      },
+      "rulesTimeoutMs": {
+        "type": "integer",
+        "minimum": 250,
+        "maximum": 10000,
+        "description": "Timeout da carga de regras mandatorias em ms; estourar aciona o fail-safe, nunca silencio (padrao: 2000)"
+      },
+      "recallWindowMessages": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10,
+        "description": "Quantas mensagens de usuario recentes ancoram a query do contexto recuperado (padrao: 3)"
+      }
+    }
+  }
+}

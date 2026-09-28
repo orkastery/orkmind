@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Ruff
+.ruff_cache/
+
+# Benchmark: so os resultados canonicos sao versionados
+bench/results/*
+!bench/results/.gitkeep
+!bench/results/latest.json
+!bench/results/baseline-pre-port.json
+
+# Estado privado do Orkastery (perfis de conta dos runtimes): nunca versionar
+.orkastery/private/
+.orkastery/tmp/

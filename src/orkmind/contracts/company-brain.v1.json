@@ -1,0 +1,1158 @@
+{
+  "$defs": {
+    "Alias": {
+      "additionalProperties": false,
+      "properties": {
+        "system": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "System",
+          "type": "string"
+        },
+        "instance": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Instance",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "system",
+        "instance",
+        "id"
+      ],
+      "title": "Alias",
+      "type": "object"
+    },
+    "Assertion": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "orkmind.company-brain-assertion/v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "version": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "subject": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Subject",
+          "type": "string"
+        },
+        "predicate": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Predicate",
+          "type": "string"
+        },
+        "object_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Id"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "source": {
+          "$ref": "#/$defs/Source"
+        },
+        "producer_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Producer Id",
+          "type": "string"
+        },
+        "actor_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Actor Id"
+        },
+        "method": {
+          "const": "deterministic",
+          "title": "Method",
+          "type": "string"
+        },
+        "observed_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "recorded_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Recorded At"
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Occurred At"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid To"
+        },
+        "precision": {
+          "enum": [
+            "instant",
+            "unknown"
+          ],
+          "title": "Precision",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "candidate",
+            "accepted",
+            "contested",
+            "superseded",
+            "retracted",
+            "archived"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "acl_ref": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Acl Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "tenant_id",
+        "id",
+        "version",
+        "subject",
+        "predicate",
+        "object_id",
+        "value",
+        "source",
+        "producer_id",
+        "actor_id",
+        "method",
+        "observed_at",
+        "recorded_at",
+        "occurred_at",
+        "valid_from",
+        "valid_to",
+        "precision",
+        "state",
+        "acl_ref"
+      ],
+      "title": "Assertion",
+      "type": "object"
+    },
+    "Cycle": {
+      "additionalProperties": false,
+      "properties": {
+        "thread_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Thread Id",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "objective_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Hash"
+        },
+        "project_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Project Id"
+        },
+        "initiative_ids": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Initiative Ids",
+          "type": "array"
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "enum": [
+                "GOAL",
+                "PLAN",
+                "GO",
+                "CHECK",
+                "SHIP",
+                "MASTER"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Phase"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Id"
+        },
+        "context_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Context Hash"
+        }
+      },
+      "required": [
+        "thread_id",
+        "objective_id",
+        "objective_hash",
+        "project_id",
+        "initiative_ids",
+        "phase",
+        "session_id",
+        "context_hash"
+      ],
+      "title": "Cycle",
+      "type": "object"
+    },
+    "Entity": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "orkmind.company-brain-entity/v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "prod",
+            "proj",
+            "init"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent Id"
+        },
+        "workspace_ids": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Workspace Ids",
+          "type": "array"
+        },
+        "depends_on": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Depends On",
+          "type": "array"
+        },
+        "aliases": {
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "maxItems": 1000,
+          "title": "Aliases",
+          "type": "array"
+        },
+        "title": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 20000,
+          "title": "Description",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "idea",
+            "planned",
+            "ready",
+            "in_progress",
+            "validating",
+            "delivered",
+            "blocked",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "acceptance_criteria": {
+          "items": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Acceptance Criteria",
+          "type": "array"
+        },
+        "owner": {
+          "$ref": "#/$defs/Owner"
+        },
+        "source": {
+          "$ref": "#/$defs/Source"
+        },
+        "acl_ref": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Acl Ref",
+          "type": "string"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed At"
+        },
+        "recorded_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Recorded At"
+        }
+      },
+      "required": [
+        "schema",
+        "tenant_id",
+        "id",
+        "kind",
+        "version",
+        "parent_id",
+        "workspace_ids",
+        "depends_on",
+        "aliases",
+        "title",
+        "description",
+        "status",
+        "acceptance_criteria",
+        "owner",
+        "source",
+        "acl_ref",
+        "observed_at",
+        "recorded_at"
+      ],
+      "title": "Entity",
+      "type": "object"
+    },
+    "Event": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "orkmind.company-brain-event/v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "producer_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Producer Id",
+          "type": "string"
+        },
+        "aggregate_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Aggregate Id",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "source_event_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Source Event Id",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/Source"
+        },
+        "operation": {
+          "enum": [
+            "upsert",
+            "assert",
+            "tombstone"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "payload": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Entity"
+            },
+            {
+              "$ref": "#/$defs/Assertion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Payload"
+        },
+        "payload_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Payload Hash",
+          "type": "string"
+        },
+        "cycle": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Cycle"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9._/#:-]+$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Occurred At"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed At"
+        },
+        "acl_ref": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Acl Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "tenant_id",
+        "id",
+        "producer_id",
+        "aggregate_id",
+        "sequence",
+        "source_event_id",
+        "source",
+        "operation",
+        "payload",
+        "payload_hash",
+        "cycle",
+        "evidence_refs",
+        "occurred_at",
+        "observed_at",
+        "acl_ref"
+      ],
+      "title": "Event",
+      "type": "object"
+    },
+    "Facets": {
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Ids",
+          "type": "array"
+        },
+        "kinds": {
+          "items": {
+            "enum": [
+              "prod",
+              "proj",
+              "init",
+              "assertion"
+            ],
+            "type": "string"
+          },
+          "title": "Kinds",
+          "type": "array"
+        },
+        "workspace_ids": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Workspace Ids",
+          "type": "array"
+        },
+        "source_instances": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Source Instances",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ids",
+        "kinds",
+        "workspace_ids",
+        "source_instances"
+      ],
+      "title": "Facets",
+      "type": "object"
+    },
+    "Migration": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "orkmind.company-brain-migration/v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "batch_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Batch Id",
+          "type": "string"
+        },
+        "source_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Hash",
+          "type": "string"
+        },
+        "operations": {
+          "items": {
+            "$ref": "#/$defs/MigrationOperation"
+          },
+          "maxItems": 1000,
+          "title": "Operations",
+          "type": "array"
+        },
+        "observed_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+          "title": "Observed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "tenant_id",
+        "batch_id",
+        "source_hash",
+        "operations",
+        "observed_at"
+      ],
+      "title": "Migration",
+      "type": "object"
+    },
+    "MigrationOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "insert",
+            "update",
+            "unchanged",
+            "conflict"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "expected_version": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expected Version"
+        },
+        "before_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Before Hash"
+        },
+        "after": {
+          "$ref": "#/$defs/Entity"
+        },
+        "gaps": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Gaps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "operation",
+        "expected_version",
+        "before_hash",
+        "after",
+        "gaps"
+      ],
+      "title": "MigrationOperation",
+      "type": "object"
+    },
+    "Owner": {
+      "additionalProperties": false,
+      "properties": {
+        "raw": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Raw"
+        },
+        "state": {
+          "enum": [
+            "legacy-label",
+            "unknown"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "principal": {
+          "title": "Principal",
+          "type": "null"
+        }
+      },
+      "required": [
+        "raw",
+        "state",
+        "principal"
+      ],
+      "title": "Owner",
+      "type": "object"
+    },
+    "Receipt": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "orkmind.company-brain-receipt/v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "event_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "observed",
+            "received",
+            "validated",
+            "materialized",
+            "indexed",
+            "retrievable"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "result": {
+          "enum": [
+            "ok",
+            "conflict",
+            "forbidden",
+            "unavailable",
+            "withheld"
+          ],
+          "title": "Result",
+          "type": "string"
+        },
+        "attempt": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Attempt",
+          "type": "integer"
+        },
+        "materialized_version": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Materialized Version"
+        },
+        "recorded_at": {
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,6})?Z$",
+          "title": "Recorded At",
+          "type": "string"
+        },
+        "previous_receipt_id": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Previous Receipt Id"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error"
+        }
+      },
+      "required": [
+        "schema",
+        "tenant_id",
+        "id",
+        "event_id",
+        "stage",
+        "result",
+        "attempt",
+        "materialized_version",
+        "recorded_at",
+        "previous_receipt_id",
+        "error"
+      ],
+      "title": "Receipt",
+      "type": "object"
+    },
+    "Selection": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "orkmind.company-brain-selection/v1",
+          "title": "Schema",
+          "type": "string"
+        },
+        "tenant_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Tenant Id",
+          "type": "string"
+        },
+        "facets": {
+          "$ref": "#/$defs/Facets"
+        },
+        "mode": {
+          "enum": [
+            "selection",
+            "context"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 1000,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        },
+        "offset": {
+          "maximum": 100000,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "schema",
+        "tenant_id",
+        "facets",
+        "mode",
+        "limit",
+        "offset"
+      ],
+      "title": "Selection",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "const": "ork",
+          "title": "Authority",
+          "type": "string"
+        },
+        "instance": {
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:/-]*$",
+          "title": "Instance",
+          "type": "string"
+        },
+        "source_ref": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9._/#:-]+$",
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "source_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Hash",
+          "type": "string"
+        },
+        "source_version": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Source Version",
+          "type": "integer"
+        },
+        "location": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "authority",
+        "instance",
+        "source_ref",
+        "source_hash",
+        "source_version",
+        "location"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "$id": "orkmind.company-brain/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/Entity"
+    },
+    {
+      "$ref": "#/$defs/Assertion"
+    },
+    {
+      "$ref": "#/$defs/Event"
+    },
+    {
+      "$ref": "#/$defs/Receipt"
+    },
+    {
+      "$ref": "#/$defs/Selection"
+    },
+    {
+      "$ref": "#/$defs/Migration"
+    }
+  ],
+  "x-semantic-validation": "company_brain.semantic and validate_catalog; D4-D7"
+}

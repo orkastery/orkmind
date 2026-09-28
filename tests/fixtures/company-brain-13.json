@@ -1,0 +1,498 @@
+{
+  "provenance": "IDs and topology from canonical Ork portfolio, 2026-09-13; all other content synthetic",
+  "catalog": [
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "prod-orkastery",
+      "kind": "prod",
+      "version": 1,
+      "parent_id": null,
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "prod-orkastery"
+        }
+      ],
+      "title": "Synthetic prod-orkastery",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#prod-orkastery",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:prod-orkastery"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "prod-orkmind",
+      "kind": "prod",
+      "version": 1,
+      "parent_id": null,
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "prod-orkmind"
+        }
+      ],
+      "title": "Synthetic prod-orkmind",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#prod-orkmind",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:prod-orkmind"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "proj-maestro-workspace",
+      "kind": "proj",
+      "version": 1,
+      "parent_id": "prod-orkastery",
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "proj-maestro-workspace"
+        }
+      ],
+      "title": "Synthetic proj-maestro-workspace",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#proj-maestro-workspace",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:proj-maestro-workspace"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "proj-company-brain",
+      "kind": "proj",
+      "version": 1,
+      "parent_id": "prod-orkmind",
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "proj-company-brain"
+        }
+      ],
+      "title": "Synthetic proj-company-brain",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#proj-company-brain",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:proj-company-brain"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i18-portfolio-ontology",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i18-portfolio-ontology"
+        }
+      ],
+      "title": "Synthetic init-i18-portfolio-ontology",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i18-portfolio-ontology",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i18-portfolio-ontology"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i19-multirepo-catalog",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [
+        "init-i18-portfolio-ontology"
+      ],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i19-multirepo-catalog"
+        }
+      ],
+      "title": "Synthetic init-i19-multirepo-catalog",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i19-multirepo-catalog",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i19-multirepo-catalog"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i20-kanban-modes",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [
+        "init-i19-multirepo-catalog"
+      ],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i20-kanban-modes"
+        }
+      ],
+      "title": "Synthetic init-i20-kanban-modes",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i20-kanban-modes",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i20-kanban-modes"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i21-channel-continuity",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [
+        "init-i20-kanban-modes"
+      ],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i21-channel-continuity"
+        }
+      ],
+      "title": "Synthetic init-i21-channel-continuity",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i21-channel-continuity",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i21-channel-continuity"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i22-runtime-config",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [
+        "init-i21-channel-continuity"
+      ],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i22-runtime-config"
+        }
+      ],
+      "title": "Synthetic init-i22-runtime-config",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i22-runtime-config",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i22-runtime-config"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i23-copilot-maestro",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [
+        "init-i22-runtime-config"
+      ],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i23-copilot-maestro"
+        }
+      ],
+      "title": "Synthetic init-i23-copilot-maestro",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i23-copilot-maestro",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i23-copilot-maestro"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i24-ux-docs",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-maestro-workspace",
+      "workspace_ids": [],
+      "depends_on": [
+        "init-i23-copilot-maestro"
+      ],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i24-ux-docs"
+        }
+      ],
+      "title": "Synthetic init-i24-ux-docs",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i24-ux-docs",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i24-ux-docs"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i25-company-brain-foundation",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-company-brain",
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i25-company-brain-foundation"
+        }
+      ],
+      "title": "Synthetic init-i25-company-brain-foundation",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i25-company-brain-foundation",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i25-company-brain-foundation"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-i26-company-brain-workspace",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-company-brain",
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-i26-company-brain-workspace"
+        }
+      ],
+      "title": "Synthetic init-i26-company-brain-workspace",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-i26-company-brain-workspace",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-i26-company-brain-workspace"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    }
+  ]
+}

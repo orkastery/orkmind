@@ -1,0 +1,285 @@
+{
+  "gerado_em": "2026-09-01T01:41:27.622062+00:00",
+  "commit": "31e4e4f",
+  "banco": "orkmind_bench_test",
+  "embedder": "fake deterministico (sha256 por bloco, L2 normalizado)",
+  "rodadas": {
+    "hermes": {
+      "runner": "hermes",
+      "commit": "31e4e4f",
+      "timestamp": "2026-09-01T01:41:18.971728+00:00",
+      "metrics": {
+        "M1": {
+          "num": 20,
+          "den": 20,
+          "taxa": 1.0
+        },
+        "M2": {
+          "num": 20,
+          "den": 20,
+          "taxa": 1.0,
+          "omitidas_por_budget": 0
+        },
+        "M5": {
+          "chars_injetados_medio": 2678,
+          "latencia_ms_p50": 51.066
+        },
+        "M6": {
+          "turno_1": 0.3438,
+          "turno_10": 0.3337,
+          "turno_20": 0.5872,
+          "turno_40": 0.5872
+        },
+        "M3": {
+          "casos": [
+            {
+              "caso": "backend derrubado apos carga",
+              "alerta_presente": true,
+              "esperado": true
+            },
+            {
+              "caso": "backend vazio apos carga",
+              "alerta_presente": true,
+              "esperado": true
+            },
+            {
+              "caso": "timeout na carga apos carga previa",
+              "alerta_presente": true,
+              "esperado": true
+            },
+            {
+              "caso": "schema invalido apos carga",
+              "alerta_presente": true,
+              "esperado": true
+            },
+            {
+              "caso": "backend ausente apos carga",
+              "alerta_presente": true,
+              "esperado": true
+            },
+            {
+              "caso": "controle: falha sem carga previa (nao deve alertar)",
+              "alerta_presente": false,
+              "esperado": false
+            }
+          ],
+          "num": 6,
+          "den": 6
+        },
+        "M4": {
+          "recall_at_5": 0.0,
+          "precision_at_5": 0.0,
+          "embedder": "fake",
+          "sessoes": 4,
+          "sanidade_pipeline": {
+            "num": 12,
+            "den": 12,
+            "taxa": 1.0
+          },
+          "nota": "recall_at_5 e precision_at_5 com embedder fake NAO medem qualidade semantica: o embedder e um hash, textos com o mesmo sentido geram vetores nao relacionados. O numero honesto aqui e proximo de zero e isso e esperado. O que esta validado e a ESTRUTURA, medida por sanidade_pipeline. Numero real depende de embedder real, adiado para o proximo ciclo. Veja bench/README.md."
+        }
+      },
+      "bloco_de_regras": "\n---\n## REGRAS MANDATORIAS (OBEDECER SEMPRE)\n\n### DOMINIO: COMUNICACAO\n- [CRITICA] [rule] Toda comunicacao com o dono e em portugues brasileiro. Nunca espanhol, nunca ingles em texto corrido, nunca em-dash.\n\n### DOMINIO: DATABASE\n- [MANDATORIA] [instruction] Revisar toda migracao de banco antes de aplicar em qualquer ambiente, inclusive desenvolvimento.\n\n### DOMINIO: GOVERNANCE\n- [CRITICA] [rule] REGRA DE GOVERNANCA: Nenhum agente pode deletar, compactar, resumir destrutivamente ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. O agente deve BUSCAR informacao via orkmind_recall ou orkmind_search, NUNCA consolidar ou reduzir memorias existentes. Violacoes desta regra sao falhas de governanca criticas.\n\n### DOMINIO: PROCESSO\n- [CRITICA] [rule] Nunca pedir ao dono uma decisao tecnica sem antes apresentar pelo menos duas opcoes e recomendar explicitamente um caminho, com justificativa.\n\n### DOMINIO: SECURITY\n- [MANDATORIA] [instruction] Nunca escrever credenciais, tokens ou chaves de API em arquivo, log ou mensagem. Sempre via variavel de ambiente.\n\n---\n",
+      "guardrail": "\n## Governanca de Memoria\nIMPORTANTE: Voce NAO deve compactar, resumir destrutivamente, deletar ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. Se precisar de informacao, busque via orkmind_recall (tags + semantica) ou orkmind_search (texto livre). O OrkMind e sua fonte autoritativa de memoria - tudo que voce precisa saber esta la, acessavel por busca.\n",
+      "fallback": "\n## ALERTA: Regras de Governanca Indisponiveis\nO OrkMind nao conseguiu carregar as regras mandatorias.\nNAO prossiga com nenhuma operacao critica ate que as\nregras estejam disponiveis. Tente reconectar via orkmind_rules.\n"
+    },
+    "openclaw": {
+      "runner": "openclaw",
+      "rotulo": "openclaw",
+      "dist": "integrations/openclaw/memory-orkmind/dist",
+      "commit": "31e4e4f",
+      "timestamp": "2026-09-01T01:41:22.860Z",
+      "metrics": {
+        "M1": {
+          "num": 20,
+          "den": 20,
+          "taxa": 1
+        },
+        "M2": {
+          "num": 20,
+          "den": 20,
+          "taxa": 1,
+          "omitidas_por_budget": 0
+        },
+        "M5": {
+          "chars_injetados_medio": 1557,
+          "latencia_ms_p50": 3.286
+        },
+        "M6": {
+          "turno_1": 0.4867,
+          "turno_10": 0.4867,
+          "turno_20": 0.4867,
+          "turno_40": 0.4867
+        },
+        "M3": {
+          "casos": [
+            {
+              "caso": "backend derrubado apos carga",
+              "alerta_presente": true,
+              "esperado": true,
+              "injecao_disponivel": true
+            },
+            {
+              "caso": "backend vazio apos carga",
+              "alerta_presente": true,
+              "esperado": true,
+              "injecao_disponivel": true
+            },
+            {
+              "caso": "schema invalido apos carga",
+              "alerta_presente": true,
+              "esperado": true,
+              "injecao_disponivel": true
+            },
+            {
+              "caso": "timeout na carga apos carga previa",
+              "alerta_presente": true,
+              "esperado": true,
+              "injecao_disponivel": true
+            },
+            {
+              "caso": "sem mensagem de usuario",
+              "alerta_presente": false,
+              "esperado": false,
+              "injecao_disponivel": true
+            },
+            {
+              "caso": "controle: falha sem carga previa (nao deve alertar)",
+              "alerta_presente": false,
+              "esperado": false,
+              "injecao_disponivel": true
+            }
+          ],
+          "num": 6,
+          "den": 6
+        },
+        "M4": {
+          "recall_at_5": 0,
+          "precision_at_5": 0,
+          "embedder": "fake",
+          "sessoes": 4,
+          "sanidade_pipeline": {
+            "num": 12,
+            "den": 12,
+            "taxa": 1
+          },
+          "nota": "recall_at_5 e precision_at_5 com embedder fake NAO medem qualidade semantica. O que esta validado e a ESTRUTURA, via sanidade_pipeline."
+        }
+      },
+      "bloco_de_regras": "\n## Governanca de Memoria\nIMPORTANTE: Voce NAO deve compactar, resumir destrutivamente, deletar ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. Se precisar de informacao, busque via memory_recall (tags + semantica) ou memory_search (texto livre). O OrkMind e sua fonte autoritativa de memoria - tudo que voce precisa saber esta la, acessavel por busca.\n\n---\n## REGRAS MANDATORIAS (OBEDECER SEMPRE)\n\n### DOMINIO: COMUNICACAO\n- [CRITICA] [rule] Toda comunicacao com o dono e em portugues brasileiro. Nunca espanhol, nunca ingles em texto corrido, nunca em-dash.\n\n### DOMINIO: DATABASE\n- [MANDATORIA] [instruction] Revisar toda migracao de banco antes de aplicar em qualquer ambiente, inclusive desenvolvimento.\n\n### DOMINIO: GOVERNANCE\n- [CRITICA] [rule] REGRA DE GOVERNANCA: Nenhum agente pode deletar, compactar, resumir destrutivamente ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. O agente deve BUSCAR informacao via orkmind_recall ou orkmind_search, NUNCA consolidar ou reduzir memorias existentes. Violacoes desta regra sao falhas de governanca criticas.\n\n### DOMINIO: PROCESSO\n- [CRITICA] [rule] Nunca pedir ao dono uma decisao tecnica sem antes apresentar pelo menos duas opcoes e recomendar explicitamente um caminho, com justificativa.\n\n### DOMINIO: SECURITY\n- [MANDATORIA] [instruction] Nunca escrever credenciais, tokens ou chaves de API em arquivo, log ou mensagem. Sempre via variavel de ambiente.\n\n---\n",
+      "prompt_builder": "## Memoria (OrkMind)\nOrkMind (PostgreSQL + pgvector) e o provedor OFICIAL e UNICO de memoria deste agente. TODA informacao persistente (fatos, preferencias, decisoes, pessoas, datas, tarefas) esta armazenada no OrkMind. NAO existe outro backend de memoria.\n\n## Governanca de Memoria\nIMPORTANTE: Voce NAO deve compactar, resumir destrutivamente, deletar ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. Se precisar de informacao, busque via memory_recall (tags + semantica) ou memory_search (texto livre). O OrkMind e sua fonte autoritativa de memoria - tudo que voce precisa saber esta la, acessavel por busca.\n\n"
+    },
+    "openclaw_pre_port": {
+      "runner": "openclaw",
+      "rotulo": "openclaw-pre-port",
+      "dist": "/tmp/orkmind-preport/integrations/openclaw/memory-orkmind/dist",
+      "commit": "7de0a69",
+      "timestamp": "2026-09-01T01:34:02.183Z",
+      "metrics": {
+        "M1": {
+          "num": 0,
+          "den": 20,
+          "taxa": 0
+        },
+        "M2": {
+          "num": 0,
+          "den": 20,
+          "taxa": 0,
+          "omitidas_por_budget": 0
+        },
+        "M5": {
+          "chars_injetados_medio": 0,
+          "latencia_ms_p50": 0.647
+        },
+        "M6": {
+          "turno_1": 0,
+          "turno_10": 0,
+          "turno_20": 0,
+          "turno_40": 0
+        },
+        "M3": {
+          "casos": [
+            {
+              "caso": "backend derrubado apos carga",
+              "alerta_presente": false,
+              "esperado": true,
+              "injecao_disponivel": false
+            },
+            {
+              "caso": "backend vazio apos carga",
+              "alerta_presente": false,
+              "esperado": true,
+              "injecao_disponivel": false
+            },
+            {
+              "caso": "schema invalido apos carga",
+              "alerta_presente": false,
+              "esperado": true,
+              "injecao_disponivel": false
+            },
+            {
+              "caso": "timeout na carga apos carga previa",
+              "alerta_presente": false,
+              "esperado": true,
+              "injecao_disponivel": false
+            },
+            {
+              "caso": "sem mensagem de usuario",
+              "alerta_presente": false,
+              "esperado": false,
+              "injecao_disponivel": false
+            },
+            {
+              "caso": "controle: falha sem carga previa (nao deve alertar)",
+              "alerta_presente": false,
+              "esperado": false,
+              "injecao_disponivel": false
+            }
+          ],
+          "num": 2,
+          "den": 6
+        },
+        "M4": {
+          "recall_at_5": 0,
+          "precision_at_5": 0,
+          "embedder": "fake",
+          "sessoes": 4,
+          "sanidade_pipeline": {
+            "num": 0,
+            "den": 12,
+            "taxa": 0
+          },
+          "nota": "recall_at_5 e precision_at_5 com embedder fake NAO medem qualidade semantica. O que esta validado e a ESTRUTURA, via sanidade_pipeline."
+        }
+      },
+      "bloco_de_regras": "",
+      "prompt_builder": ""
+    }
+  },
+  "M7": {
+    "blocos_equivalentes": true,
+    "diff_chars": 0,
+    "chars_hermes": 1128,
+    "chars_openclaw": 1128,
+    "guardrail_nos_dois": true,
+    "nota": "M7 compara o bloco de regras a partir de '## REGRAS MANDATORIAS', que e a parte que precisa ser literal e identica nos dois harnesses. Guardrail e alerta de fail-safe tem nomes de ferramenta proprios de cada integracao: o guardrail e conferido pela frase que carrega a garantia e o alerta e coberto pelo M3."
+  },
+  "delta": {
+    "M1": {
+      "antes": "0/20 (0.00)",
+      "depois": "20/20 (1.00)",
+      "delta_taxa": 1.0
+    },
+    "M2": {
+      "antes": "0/20 (0.00)",
+      "depois": "20/20 (1.00)",
+      "delta_taxa": 1.0
+    },
+    "M3": {
+      "antes": "2/6 (0.33)",
+      "depois": "6/6 (1.00)",
+      "delta_taxa": 0.6667
+    }
+  },
+  "report_markdown": "# Benchmark OrkMind\n\n- Gerado em: `2026-09-01T01:41:27.622062+00:00`\n- Banco: `orkmind_bench_test` (descartavel, so do bench)\n- Embedder: fake deterministico (sha256 por bloco, L2 normalizado)\n\nToda fracao aparece como `num/den (taxa)`. Percentual sem denominador esconde o tamanho da amostra, entao aqui nao existe.\n\n## Rodadas medidas\n\n| Rodada | Runner | Commit | Timestamp |\n| --- | --- | --- | --- |\n| OpenClaw pre-port (antes) | openclaw | `7de0a69` | 2026-09-01T01:34:02.183Z |\n| OpenClaw atual (depois) | openclaw | `31e4e4f` | 2026-09-01T01:41:22.860Z |\n| Hermes atual | hermes | `31e4e4f` | 2026-09-01T01:41:18.971728+00:00 |\n\n## M1 - Injecao constitucional (regras N1, `priority = critical`)\n\nTurnos em que TODAS as regras criticas apareceram literalmente no prompt.\n\n| Rodada | num/den (taxa) |\n| --- | --- |\n| OpenClaw pre-port (antes) | 0/20 (0.00) |\n| OpenClaw atual (depois) | 20/20 (1.00) |\n| Hermes atual | 20/20 (1.00) |\n\n## M2 - Regras mandatorias (`mandatory = true`)\n\n| Rodada | num/den (taxa) | Omitidas por budget |\n| --- | --- | --- |\n| OpenClaw pre-port (antes) | 0/20 (0.00) | 0 |\n| OpenClaw atual (depois) | 20/20 (1.00) | 0 |\n| Hermes atual | 20/20 (1.00) | 0 |\n\n## M3 - Fail-safe\n\nCenarios de falha do backend depois de uma carga bem-sucedida devem produzir o alerta; os casos de controle NAO devem. O acerto conta os dois sentidos, senao um plugin que alerta sempre marcaria 100%.\n\n| Rodada | acertos/casos (taxa) |\n| --- | --- |\n| OpenClaw pre-port (antes) | 2/6 (0.33) |\n| OpenClaw atual (depois) | 6/6 (1.00) |\n| Hermes atual | 6/6 (1.00) |\n\n### M3 detalhado: OpenClaw pre-port (antes)\n\n| Cenario | Alerta presente | Esperado | Acertou |\n| --- | --- | --- | --- |\n| backend derrubado apos carga | nao | sim | nao |\n| backend vazio apos carga | nao | sim | nao |\n| schema invalido apos carga | nao | sim | nao |\n| timeout na carga apos carga previa | nao | sim | nao |\n| sem mensagem de usuario | nao | nao | sim |\n| controle: falha sem carga previa (nao deve alertar) | nao | nao | sim |\n\n### M3 detalhado: OpenClaw atual (depois)\n\n| Cenario | Alerta presente | Esperado | Acertou |\n| --- | --- | --- | --- |\n| backend derrubado apos carga | sim | sim | sim |\n| backend vazio apos carga | sim | sim | sim |\n| schema invalido apos carga | sim | sim | sim |\n| timeout na carga apos carga previa | sim | sim | sim |\n| sem mensagem de usuario | nao | nao | sim |\n| controle: falha sem carga previa (nao deve alertar) | nao | nao | sim |\n\n### M3 detalhado: Hermes atual\n\n| Cenario | Alerta presente | Esperado | Acertou |\n| --- | --- | --- | --- |\n| backend derrubado apos carga | sim | sim | sim |\n| backend vazio apos carga | sim | sim | sim |\n| timeout na carga apos carga previa | sim | sim | sim |\n| schema invalido apos carga | sim | sim | sim |\n| backend ausente apos carga | sim | sim | sim |\n| controle: falha sem carga previa (nao deve alertar) | nao | nao | sim |\n\n## M4 - Recuperacao (estrutura validada, numero adiado)\n\n| Rodada | recall@5 | precision@5 | Sanidade do pipeline | Embedder |\n| --- | --- | --- | --- | --- |\n| OpenClaw pre-port (antes) | 0 | 0 | 0/12 (0.00) | fake |\n| OpenClaw atual (depois) | 0 | 0 | 12/12 (1.00) | fake |\n| Hermes atual | 0.0000 | 0.0000 | 12/12 (1.00) | fake |\n\n**Leia isto antes de citar M4:** com embedder fake, `recall@5` e `precision@5` NAO medem qualidade semantica. O embedder e um hash: textos de mesmo sentido geram vetores nao relacionados, entao o numero honesto e proximo de zero e isso e esperado. O que este ciclo valida e a ESTRUTURA, medida por `sanidade_pipeline` (consultar pelo texto exato de uma memoria tem que traze-la no top-5: se isso nao der 1.00, o pipeline esta quebrado). O numero com embedder real fica para o proximo ciclo.\n\n## M5 - Custo por turno\n\n| Rodada | Chars injetados (medio) | Latencia p50 (ms) |\n| --- | --- | --- |\n| OpenClaw pre-port (antes) | 0 | 0.647 |\n| OpenClaw atual (depois) | 1557 | 3.286 |\n| Hermes atual | 2678 | 51.066 |\n\n## M6 - Diluicao ao longo da sessao\n\nFatia do prompt do turno ocupada pelo bloco de regras, nos turnos 1, 10, 20 e 40 de uma sessao longa sintetica. Mede o quanto o contexto recuperado dilui a governanca: cair para perto de zero significa que as regras viraram rodape de um prompt tomado por outra coisa. Zero no pre-port tem outra causa: nao ha bloco de regras nenhum.\n\n| Rodada | Turno 1 | Turno 10 | Turno 20 | Turno 40 |\n| --- | --- | --- | --- | --- |\n| OpenClaw pre-port (antes) | 0 | 0 | 0 | 0 |\n| OpenClaw atual (depois) | 0.4867 | 0.4867 | 0.4867 | 0.4867 |\n| Hermes atual | 0.3438 | 0.3337 | 0.5872 | 0.5872 |\n\n## M7 - Fidelidade cruzada (Hermes vs OpenClaw)\n\n| Item | Valor |\n| --- | --- |\n| Blocos equivalentes | sim |\n| Chars divergentes | 0 |\n| Chars do bloco (Hermes) | 1128 |\n| Chars do bloco (OpenClaw) | 1128 |\n| Guardrail nos dois | sim |\n\nM7 compara o bloco de regras a partir de '## REGRAS MANDATORIAS', que e a parte que precisa ser literal e identica nos dois harnesses. Guardrail e alerta de fail-safe tem nomes de ferramenta proprios de cada integracao: o guardrail e conferido pela frase que carrega a garantia e o alerta e coberto pelo M3.\n\n## Antes e depois do port (mesmo runner, mesmo banco)\n\n| Metrica | Antes (pre-port) | Depois (atual) | Delta da taxa |\n| --- | --- | --- | --- |\n| M1 | 0/20 (0.00) | 20/20 (1.00) | +1.00 |\n| M2 | 0/20 (0.00) | 20/20 (1.00) | +1.00 |\n| M3 | 2/6 (0.33) | 6/6 (1.00) | +0.67 |\n\nSo o OpenClaw aparece nesta tabela. Comparar Hermes com OpenClaw pre-port seria comparar dois programas diferentes e creditar a diferenca ao port.\n\n## O que este benchmark NAO prova\n\n- Nao prova qualidade de recuperacao semantica: o embedder e fake (ver M4).\n- Nao prova obediencia do modelo: mede o que chega ao prompt, nao o que o modelo faz com isso.\n- Nao e um benchmark de memoria de longo prazo tipo LoCoMo: isso esta no roadmap.\n- Nao mede sessao viva: roda headless, com banco descartavel e datasets versionados.\n"
+}

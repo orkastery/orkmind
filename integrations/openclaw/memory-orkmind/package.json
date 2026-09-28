@@ -1,0 +1,39 @@
+{
+  "name": "@orkastery/openclaw-memory-orkmind",
+  "version": "0.2.0",
+  "description": "Plugin de memoria OrkMind para OpenClaw - PostgreSQL + pgvector com busca vetorial semantica",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "build:test": "tsc -p tsconfig.test.json",
+    "test": "npm run build:test && node --import ./test/hooks.mjs --test \"dist-test/test/*.test.js\""
+  },
+  "dependencies": {
+    "pg": "^8.13.0"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.7.1"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
+  },
+  "openclaw": {
+    "extensions": [
+      "./src/index.ts"
+    ],
+    "runtimeExtensions": [
+      "./dist/index.js"
+    ]
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.23.1",
+    "typescript": "^7.0.2"
+  }
+}

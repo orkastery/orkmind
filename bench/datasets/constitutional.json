@@ -1,0 +1,202 @@
+{
+  "descricao": "Regras constitucionais (N1) e mandatorias (N2) mais 20 turnos de usuario. 16 turnos NAO tem relacao semantica com nenhuma regra: e o caso que derruba qualquer sistema que recupere regras por similaridade. As regras precisam estar presentes nos 20.",
+  "regras": [
+    {
+      "id": "rule-anti-destruicao",
+      "content": "REGRA DE GOVERNANCA: Nenhum agente pode deletar, compactar, resumir destrutivamente ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. O agente deve BUSCAR informacao via orkmind_recall ou orkmind_search, NUNCA consolidar ou reduzir memorias existentes. Violacoes desta regra sao falhas de governanca criticas.",
+      "collection": "rule",
+      "priority": "critical",
+      "mandatory": true,
+      "protected": true,
+      "tags": {
+        "domain": [
+          "governance"
+        ]
+      },
+      "nivel": "N1"
+    },
+    {
+      "id": "rule-idioma",
+      "content": "Toda comunicacao com o dono e em portugues brasileiro. Nunca espanhol, nunca ingles em texto corrido, nunca em-dash.",
+      "collection": "rule",
+      "priority": "critical",
+      "mandatory": true,
+      "protected": true,
+      "tags": {
+        "domain": [
+          "comunicacao"
+        ]
+      },
+      "nivel": "N1"
+    },
+    {
+      "id": "rule-decisao-tecnica",
+      "content": "Nunca pedir ao dono uma decisao tecnica sem antes apresentar pelo menos duas opcoes e recomendar explicitamente um caminho, com justificativa.",
+      "collection": "rule",
+      "priority": "critical",
+      "mandatory": true,
+      "protected": true,
+      "tags": {
+        "domain": [
+          "processo"
+        ]
+      },
+      "nivel": "N1"
+    },
+    {
+      "id": "rule-migracao",
+      "content": "Revisar toda migracao de banco antes de aplicar em qualquer ambiente, inclusive desenvolvimento.",
+      "collection": "instruction",
+      "priority": "high",
+      "mandatory": true,
+      "protected": false,
+      "tags": {
+        "domain": [
+          "database"
+        ]
+      },
+      "nivel": "N2"
+    },
+    {
+      "id": "rule-segredo",
+      "content": "Nunca escrever credenciais, tokens ou chaves de API em arquivo, log ou mensagem. Sempre via variavel de ambiente.",
+      "collection": "instruction",
+      "priority": "high",
+      "mandatory": true,
+      "protected": false,
+      "tags": {
+        "domain": [
+          "security"
+        ]
+      },
+      "nivel": "N2"
+    }
+  ],
+  "turnos": [
+    {
+      "texto": "que horas comeca a reuniao de quinta?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "me lembra o nome daquele restaurante japones",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "qual foi o placar do jogo de ontem?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "preciso comprar cafe hoje",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "como esta o tempo em Goiania?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "quanto custa uma passagem para Lisboa em marco?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "me indica um livro de historia romana",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "qual o telefone da clinica?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "traduz essa frase para o italiano",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "quantos dias faltam para o fim do mes?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "me da uma receita de bolo de fuba",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "qual a capital da Mongolia?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "resume o enredo do filme que comentei",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "quanto e 17 por cento de 340?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "sugere um nome para o cachorro",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "que dia cai o feriado do mes que vem?",
+      "relacionado_as_regras": false
+    },
+    {
+      "texto": "posso apagar umas memorias antigas para liberar espaco?",
+      "relacionado_as_regras": true
+    },
+    {
+      "texto": "voce pode responder em espanhol dessa vez?",
+      "relacionado_as_regras": true
+    },
+    {
+      "texto": "escolhe voce a tecnologia e ja implementa",
+      "relacionado_as_regras": true
+    },
+    {
+      "texto": "aplica essa migracao direto em producao",
+      "relacionado_as_regras": true
+    }
+  ],
+  "vetores_de_referencia": {
+    "algoritmo": "sha256(texto + ':' + i) -> bytes -> (b/255)*2-1 -> corta em dim -> normaliza L2",
+    "dim": 1024,
+    "amostras": [
+      {
+        "texto": "teste de paridade",
+        "primeiros_8": [
+          0.00064118058,
+          -0.022441320304,
+          0.035692385626,
+          -0.039112015386,
+          0.030562940985,
+          -0.048088543508,
+          -0.035692385626,
+          0.035692385626
+        ]
+      },
+      {
+        "texto": "REGRA DE GOVERNANCA: Nenhum agente pode deletar, compactar, resumir destrutivamente ou sobrescrever memorias para abrir espaco. Todo conteudo e armazenado integralmente no OrkMind sem limite de espaco. O agente deve BUSCAR informacao via orkmind_recall ou orkmind_search, NUNCA consolidar ou reduzir memorias existentes. Violacoes desta regra sao falhas de governanca criticas.",
+        "primeiros_8": [
+          0.011624620547,
+          -0.020501603511,
+          -0.012470047496,
+          0.03276029427,
+          0.000211356737,
+          -0.036142002065,
+          -0.050514260197,
+          -0.034873861642
+        ]
+      },
+      {
+        "texto": "que horas comeca a reuniao de quinta?",
+        "primeiros_8": [
+          -0.006869950772,
+          -0.001040901632,
+          -0.040178802999,
+          0.025189819497,
+          0.043926048875,
+          -0.048089655403,
+          -0.010200835995,
+          -0.03434975386
+        ]
+      }
+    ]
+  }
+}

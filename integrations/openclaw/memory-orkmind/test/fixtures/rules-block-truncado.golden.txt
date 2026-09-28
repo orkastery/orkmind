@@ -1,0 +1,9 @@
+
+---
+## REGRAS MANDATORIAS (OBEDECER SEMPRE)
+
+### DOMINIO: COMUNICACAO
+- [CRITICA] [rule] Toda comunicacao com o dono e em portugues brasileiro, sem em-dash.
+
+(3 regra(s) omitida(s) por budget. Use orkmind_rules para ver todas.)
+---

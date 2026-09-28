@@ -1,0 +1,1258 @@
+{
+  "schema": "orkmind.company-brain-corpus/v1",
+  "cases": [
+    {
+      "name": "entity",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "project",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "proj-example",
+        "kind": "proj",
+        "version": 1,
+        "parent_id": "prod-example",
+        "workspace_ids": [
+          "workspace-one"
+        ],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "proj-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#proj-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:proj-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "initiative",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "init-example",
+        "kind": "init",
+        "version": 1,
+        "parent_id": "proj-example",
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "init-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#init-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:init-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "assertion",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-assertion/v1",
+        "tenant_id": "synthetic",
+        "id": "fact-one",
+        "version": 1,
+        "subject": "thread-example",
+        "predicate": "phase_dispatch",
+        "object_id": null,
+        "value": "GO",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "producer_id": "ork",
+        "actor_id": null,
+        "method": "deterministic",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null,
+        "occurred_at": null,
+        "valid_from": null,
+        "valid_to": null,
+        "precision": "unknown",
+        "state": "accepted",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "event",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-event/v1",
+        "tenant_id": "synthetic",
+        "id": "event-one",
+        "producer_id": "ork",
+        "aggregate_id": "prod-example",
+        "sequence": 1,
+        "source_event_id": "portfolio:prod-example:1",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "operation": "upsert",
+        "payload": {
+          "schema": "orkmind.company-brain-entity/v1",
+          "tenant_id": "synthetic",
+          "id": "prod-example",
+          "kind": "prod",
+          "version": 1,
+          "parent_id": null,
+          "workspace_ids": [],
+          "depends_on": [],
+          "aliases": [
+            {
+              "system": "ork",
+              "instance": "factory-synthetic",
+              "id": "prod-example"
+            }
+          ],
+          "title": "Produto ç 😀",
+          "description": "",
+          "status": "delivered",
+          "acceptance_criteria": [],
+          "owner": {
+            "raw": "Maestro",
+            "state": "legacy-label",
+            "principal": null
+          },
+          "source": {
+            "authority": "ork",
+            "instance": "factory-synthetic",
+            "source_ref": "portfolio.json#prod-example",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_version": 1,
+            "location": "id:prod-example"
+          },
+          "acl_ref": "grant-factory",
+          "observed_at": "2026-09-13T20:00:00Z",
+          "recorded_at": null
+        },
+        "payload_hash": "aa33561ac459dd2a68f049b79d40a80e51a6952fcb7c2fd077c7e617ad08772e",
+        "cycle": null,
+        "evidence_refs": [],
+        "occurred_at": null,
+        "observed_at": "2026-09-13T20:00:00Z",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "receipt",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-receipt/v1",
+        "tenant_id": "synthetic",
+        "id": "receipt-one",
+        "event_id": "event-one",
+        "stage": "materialized",
+        "result": "ok",
+        "attempt": 1,
+        "materialized_version": 1,
+        "recorded_at": "2026-09-13T20:00:00Z",
+        "previous_receipt_id": null,
+        "error": null
+      }
+    },
+    {
+      "name": "selection",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-selection/v1",
+        "tenant_id": "synthetic",
+        "facets": {
+          "ids": [],
+          "kinds": [],
+          "workspace_ids": [],
+          "source_instances": []
+        },
+        "mode": "selection",
+        "limit": 50,
+        "offset": 0
+      }
+    },
+    {
+      "name": "migration",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-migration/v1",
+        "tenant_id": "synthetic",
+        "batch_id": "batch-example",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "operations": [
+          {
+            "id": "prod-example",
+            "operation": "insert",
+            "expected_version": null,
+            "before_hash": null,
+            "after": {
+              "schema": "orkmind.company-brain-entity/v1",
+              "tenant_id": "synthetic",
+              "id": "prod-example",
+              "kind": "prod",
+              "version": 1,
+              "parent_id": null,
+              "workspace_ids": [],
+              "depends_on": [],
+              "aliases": [
+                {
+                  "system": "ork",
+                  "instance": "factory-synthetic",
+                  "id": "prod-example"
+                }
+              ],
+              "title": "Produto ç 😀",
+              "description": "",
+              "status": "delivered",
+              "acceptance_criteria": [],
+              "owner": {
+                "raw": "Maestro",
+                "state": "legacy-label",
+                "principal": null
+              },
+              "source": {
+                "authority": "ork",
+                "instance": "factory-synthetic",
+                "source_ref": "portfolio.json#prod-example",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "source_version": 1,
+                "location": "id:prod-example"
+              },
+              "acl_ref": "grant-factory",
+              "observed_at": "2026-09-13T20:00:00Z",
+              "recorded_at": null
+            },
+            "gaps": [
+              "owner-unresolved"
+            ]
+          }
+        ],
+        "observed_at": "2026-09-13T20:00:00Z"
+      }
+    },
+    {
+      "name": "major",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v2",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "boolean-version",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": true,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "float-version",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1.5,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "negative-version",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 0,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "extra-authority",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null,
+        "principal": "owner"
+      }
+    },
+    {
+      "name": "wrong-kind-id",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "proj",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "parent-missing",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "proj-example",
+        "kind": "proj",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [
+          "workspace-one"
+        ],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "owner-inferred",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": "human"
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "bad-time",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-99-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "payload-hash",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-event/v1",
+        "tenant_id": "synthetic",
+        "id": "event-one",
+        "producer_id": "ork",
+        "aggregate_id": "prod-example",
+        "sequence": 1,
+        "source_event_id": "portfolio:prod-example:1",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "operation": "upsert",
+        "payload": {
+          "schema": "orkmind.company-brain-entity/v1",
+          "tenant_id": "synthetic",
+          "id": "prod-example",
+          "kind": "prod",
+          "version": 1,
+          "parent_id": null,
+          "workspace_ids": [],
+          "depends_on": [],
+          "aliases": [
+            {
+              "system": "ork",
+              "instance": "factory-synthetic",
+              "id": "prod-example"
+            }
+          ],
+          "title": "Produto ç 😀",
+          "description": "",
+          "status": "delivered",
+          "acceptance_criteria": [],
+          "owner": {
+            "raw": "Maestro",
+            "state": "legacy-label",
+            "principal": null
+          },
+          "source": {
+            "authority": "ork",
+            "instance": "factory-synthetic",
+            "source_ref": "portfolio.json#prod-example",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_version": 1,
+            "location": "id:prod-example"
+          },
+          "acl_ref": "grant-factory",
+          "observed_at": "2026-09-13T20:00:00Z",
+          "recorded_at": null
+        },
+        "payload_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "cycle": null,
+        "evidence_refs": [],
+        "occurred_at": null,
+        "observed_at": "2026-09-13T20:00:00Z",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "wrong-tenant",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-event/v1",
+        "tenant_id": "other",
+        "id": "event-one",
+        "producer_id": "ork",
+        "aggregate_id": "prod-example",
+        "sequence": 1,
+        "source_event_id": "portfolio:prod-example:1",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "operation": "upsert",
+        "payload": {
+          "schema": "orkmind.company-brain-entity/v1",
+          "tenant_id": "synthetic",
+          "id": "prod-example",
+          "kind": "prod",
+          "version": 1,
+          "parent_id": null,
+          "workspace_ids": [],
+          "depends_on": [],
+          "aliases": [
+            {
+              "system": "ork",
+              "instance": "factory-synthetic",
+              "id": "prod-example"
+            }
+          ],
+          "title": "Produto ç 😀",
+          "description": "",
+          "status": "delivered",
+          "acceptance_criteria": [],
+          "owner": {
+            "raw": "Maestro",
+            "state": "legacy-label",
+            "principal": null
+          },
+          "source": {
+            "authority": "ork",
+            "instance": "factory-synthetic",
+            "source_ref": "portfolio.json#prod-example",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_version": 1,
+            "location": "id:prod-example"
+          },
+          "acl_ref": "grant-factory",
+          "observed_at": "2026-09-13T20:00:00Z",
+          "recorded_at": null
+        },
+        "payload_hash": "aa33561ac459dd2a68f049b79d40a80e51a6952fcb7c2fd077c7e617ad08772e",
+        "cycle": null,
+        "evidence_refs": [],
+        "occurred_at": null,
+        "observed_at": "2026-09-13T20:00:00Z",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "wrong-operation",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-event/v1",
+        "tenant_id": "synthetic",
+        "id": "event-one",
+        "producer_id": "ork",
+        "aggregate_id": "prod-example",
+        "sequence": 1,
+        "source_event_id": "portfolio:prod-example:1",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "operation": "assert",
+        "payload": {
+          "schema": "orkmind.company-brain-entity/v1",
+          "tenant_id": "synthetic",
+          "id": "prod-example",
+          "kind": "prod",
+          "version": 1,
+          "parent_id": null,
+          "workspace_ids": [],
+          "depends_on": [],
+          "aliases": [
+            {
+              "system": "ork",
+              "instance": "factory-synthetic",
+              "id": "prod-example"
+            }
+          ],
+          "title": "Produto ç 😀",
+          "description": "",
+          "status": "delivered",
+          "acceptance_criteria": [],
+          "owner": {
+            "raw": "Maestro",
+            "state": "legacy-label",
+            "principal": null
+          },
+          "source": {
+            "authority": "ork",
+            "instance": "factory-synthetic",
+            "source_ref": "portfolio.json#prod-example",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_version": 1,
+            "location": "id:prod-example"
+          },
+          "acl_ref": "grant-factory",
+          "observed_at": "2026-09-13T20:00:00Z",
+          "recorded_at": null
+        },
+        "payload_hash": "aa33561ac459dd2a68f049b79d40a80e51a6952fcb7c2fd077c7e617ad08772e",
+        "cycle": null,
+        "evidence_refs": [],
+        "occurred_at": null,
+        "observed_at": "2026-09-13T20:00:00Z",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "invalid-limit",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-selection/v1",
+        "tenant_id": "synthetic",
+        "facets": {
+          "ids": [],
+          "kinds": [],
+          "workspace_ids": [],
+          "source_instances": []
+        },
+        "mode": "selection",
+        "limit": 0,
+        "offset": 0
+      }
+    },
+    {
+      "name": "unknown-facet",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-selection/v1",
+        "tenant_id": "synthetic",
+        "facets": {
+          "collections": [
+            "project"
+          ]
+        },
+        "mode": "selection",
+        "limit": 50,
+        "offset": 0
+      }
+    },
+    {
+      "name": "extra-principal",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-selection/v1",
+        "tenant_id": "synthetic",
+        "facets": {
+          "ids": [],
+          "kinds": [],
+          "workspace_ids": [],
+          "source_instances": []
+        },
+        "mode": "selection",
+        "limit": 50,
+        "offset": 0,
+        "principal": "human"
+      }
+    },
+    {
+      "name": "non-system-method",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-assertion/v1",
+        "tenant_id": "synthetic",
+        "id": "fact-one",
+        "version": 1,
+        "subject": "thread-example",
+        "predicate": "phase_dispatch",
+        "object_id": null,
+        "value": "GO",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "producer_id": "ork",
+        "actor_id": null,
+        "method": "llm",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null,
+        "occurred_at": null,
+        "valid_from": null,
+        "valid_to": null,
+        "precision": "unknown",
+        "state": "accepted",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "private-source-uri",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "synthetic",
+        "id": "prod-example",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "factory-synthetic",
+            "id": "prod-example"
+          }
+        ],
+        "title": "Produto ç 😀",
+        "description": "",
+        "status": "delivered",
+        "acceptance_criteria": [],
+        "owner": {
+          "raw": "Maestro",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "postgres://user:secret@db/x",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "acl_ref": "grant-factory",
+        "observed_at": "2026-09-13T20:00:00Z",
+        "recorded_at": null
+      }
+    },
+    {
+      "name": "event-source-mismatch",
+      "valid": false,
+      "value": {
+        "schema": "orkmind.company-brain-event/v1",
+        "tenant_id": "synthetic",
+        "id": "event-one",
+        "producer_id": "ork",
+        "aggregate_id": "prod-example",
+        "sequence": 1,
+        "source_event_id": "portfolio:prod-example:1",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "operation": "upsert",
+        "payload": {
+          "schema": "orkmind.company-brain-entity/v1",
+          "tenant_id": "synthetic",
+          "id": "prod-example",
+          "kind": "prod",
+          "version": 1,
+          "parent_id": null,
+          "workspace_ids": [],
+          "depends_on": [],
+          "aliases": [
+            {
+              "system": "ork",
+              "instance": "factory-synthetic",
+              "id": "prod-example"
+            }
+          ],
+          "title": "Produto ç 😀",
+          "description": "",
+          "status": "delivered",
+          "acceptance_criteria": [],
+          "owner": {
+            "raw": "Maestro",
+            "state": "legacy-label",
+            "principal": null
+          },
+          "source": {
+            "authority": "ork",
+            "instance": "other",
+            "source_ref": "portfolio.json#prod-example",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_version": 1,
+            "location": "id:prod-example"
+          },
+          "acl_ref": "grant-factory",
+          "observed_at": "2026-09-13T20:00:00Z",
+          "recorded_at": null
+        },
+        "payload_hash": "b68a180cf3361a520c08b2e574e8d66b2f92e3c07f7ae22a3872d52a8a27de4e",
+        "cycle": null,
+        "evidence_refs": [],
+        "occurred_at": null,
+        "observed_at": "2026-09-13T20:00:00Z",
+        "acl_ref": "grant-factory"
+      }
+    },
+    {
+      "name": "unknown-entity-observation",
+      "valid": true,
+      "value": {
+        "schema": "orkmind.company-brain-event/v1",
+        "tenant_id": "synthetic",
+        "id": "event-one",
+        "producer_id": "ork",
+        "aggregate_id": "prod-example",
+        "sequence": 1,
+        "source_event_id": "portfolio:prod-example:1",
+        "source": {
+          "authority": "ork",
+          "instance": "factory-synthetic",
+          "source_ref": "portfolio.json#prod-example",
+          "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_version": 1,
+          "location": "id:prod-example"
+        },
+        "operation": "upsert",
+        "payload": {
+          "schema": "orkmind.company-brain-entity/v1",
+          "tenant_id": "synthetic",
+          "id": "prod-example",
+          "kind": "prod",
+          "version": 1,
+          "parent_id": null,
+          "workspace_ids": [],
+          "depends_on": [],
+          "aliases": [
+            {
+              "system": "ork",
+              "instance": "factory-synthetic",
+              "id": "prod-example"
+            }
+          ],
+          "title": "Produto ç 😀",
+          "description": "",
+          "status": "delivered",
+          "acceptance_criteria": [],
+          "owner": {
+            "raw": "Maestro",
+            "state": "legacy-label",
+            "principal": null
+          },
+          "source": {
+            "authority": "ork",
+            "instance": "factory-synthetic",
+            "source_ref": "portfolio.json#prod-example",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_version": 1,
+            "location": "id:prod-example"
+          },
+          "acl_ref": "grant-factory",
+          "observed_at": null,
+          "recorded_at": null
+        },
+        "payload_hash": "cc94f26ded28037e8411a1058c50393174c9f8bc4ddf5c9a2aab1fa8cf9ac05d",
+        "cycle": null,
+        "evidence_refs": [],
+        "occurred_at": null,
+        "observed_at": null,
+        "acl_ref": "grant-factory"
+      }
+    }
+  ],
+  "catalog": [
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "prod-example",
+      "kind": "prod",
+      "version": 1,
+      "parent_id": null,
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "prod-example"
+        }
+      ],
+      "title": "Produto ç 😀",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#prod-example",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:prod-example"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "proj-example",
+      "kind": "proj",
+      "version": 1,
+      "parent_id": "prod-example",
+      "workspace_ids": [
+        "workspace-one"
+      ],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "proj-example"
+        }
+      ],
+      "title": "Produto ç 😀",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#proj-example",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:proj-example"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    },
+    {
+      "schema": "orkmind.company-brain-entity/v1",
+      "tenant_id": "synthetic",
+      "id": "init-example",
+      "kind": "init",
+      "version": 1,
+      "parent_id": "proj-example",
+      "workspace_ids": [],
+      "depends_on": [],
+      "aliases": [
+        {
+          "system": "ork",
+          "instance": "factory-synthetic",
+          "id": "init-example"
+        }
+      ],
+      "title": "Produto ç 😀",
+      "description": "",
+      "status": "delivered",
+      "acceptance_criteria": [],
+      "owner": {
+        "raw": "Maestro",
+        "state": "legacy-label",
+        "principal": null
+      },
+      "source": {
+        "authority": "ork",
+        "instance": "factory-synthetic",
+        "source_ref": "portfolio.json#init-example",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_version": 1,
+        "location": "id:init-example"
+      },
+      "acl_ref": "grant-factory",
+      "observed_at": "2026-09-13T20:00:00Z",
+      "recorded_at": null
+    }
+  ]
+}

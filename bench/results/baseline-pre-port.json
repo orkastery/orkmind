@@ -1,0 +1,86 @@
+{
+  "runner": "openclaw",
+  "rotulo": "openclaw-pre-port",
+  "dist": "/tmp/orkmind-preport/integrations/openclaw/memory-orkmind/dist",
+  "commit": "7de0a69",
+  "timestamp": "2026-09-01T01:34:02.183Z",
+  "metrics": {
+    "M1": {
+      "num": 0,
+      "den": 20,
+      "taxa": 0
+    },
+    "M2": {
+      "num": 0,
+      "den": 20,
+      "taxa": 0,
+      "omitidas_por_budget": 0
+    },
+    "M5": {
+      "chars_injetados_medio": 0,
+      "latencia_ms_p50": 0.647
+    },
+    "M6": {
+      "turno_1": 0,
+      "turno_10": 0,
+      "turno_20": 0,
+      "turno_40": 0
+    },
+    "M3": {
+      "casos": [
+        {
+          "caso": "backend derrubado apos carga",
+          "alerta_presente": false,
+          "esperado": true,
+          "injecao_disponivel": false
+        },
+        {
+          "caso": "backend vazio apos carga",
+          "alerta_presente": false,
+          "esperado": true,
+          "injecao_disponivel": false
+        },
+        {
+          "caso": "schema invalido apos carga",
+          "alerta_presente": false,
+          "esperado": true,
+          "injecao_disponivel": false
+        },
+        {
+          "caso": "timeout na carga apos carga previa",
+          "alerta_presente": false,
+          "esperado": true,
+          "injecao_disponivel": false
+        },
+        {
+          "caso": "sem mensagem de usuario",
+          "alerta_presente": false,
+          "esperado": false,
+          "injecao_disponivel": false
+        },
+        {
+          "caso": "controle: falha sem carga previa (nao deve alertar)",
+          "alerta_presente": false,
+          "esperado": false,
+          "injecao_disponivel": false
+        }
+      ],
+      "num": 2,
+      "den": 6
+    },
+    "M4": {
+      "recall_at_5": 0,
+      "precision_at_5": 0,
+      "embedder": "fake",
+      "sessoes": 4,
+      "sanidade_pipeline": {
+        "num": 0,
+        "den": 12,
+        "taxa": 0
+      },
+      "nota": "recall_at_5 e precision_at_5 com embedder fake NAO medem qualidade semantica. O que esta validado e a ESTRUTURA, via sanidade_pipeline."
+    }
+  },
+  "bloco_de_regras": "",
+  "prompt_builder": ""
+}

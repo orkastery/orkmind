@@ -1,0 +1,11 @@
+name: orkmind
+description: >-
+  Memoria semantica estruturada com ontologia tipada - 16 colecoes,
+  5 dimensoes de tags, busca deterministica + semantica, camadas de
+  contexto E1/E2/E3, regras mandatorias com governanca, e protecao
+  de regras criticas. Backend PostgreSQL + pgvector.
+version: "1.1.0"
+author: OrkMind
+type: memory_provider
+requires:
+  - orkmind

@@ -1,0 +1,17 @@
+
+---
+## REGRAS MANDATORIAS (OBEDECER SEMPRE)
+
+### DOMINIO: COMUNICACAO
+- [CRITICA] [rule] Toda comunicacao com o dono e em portugues brasileiro, sem em-dash.
+
+### DOMINIO: DATABASE
+- [MANDATORIA] [instruction] Revisar toda migracao de banco antes de aplicar em qualquer ambiente.
+
+### DOMINIO: GERAL
+- [MANDATORIA] [instruction] Registrar decisoes de arquitetura no repositorio antes de implementar.
+
+### DOMINIO: INFRA
+- [CRITICA] [rule] Nunca rodar rm -rf em ambiente de producao sem aprovacao humana.
+
+---

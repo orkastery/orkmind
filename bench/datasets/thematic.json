@@ -1,0 +1,179 @@
+{
+  "descricao": "Sessoes com tema declarado e o gabarito de quais memorias sao relevantes em cada uma. Base do M4 (recall@5 e precision@5). Com embedder fake o numero mede a mecanica do pipeline, nao qualidade semantica.",
+  "memorias": [
+    {
+      "id": "tema-deploy-1",
+      "content": "O deploy de producao roda por GitHub Actions no workflow deploy.yml.",
+      "collection": "fact",
+      "tags": {
+        "skill": [
+          "deploy"
+        ]
+      }
+    },
+    {
+      "id": "tema-deploy-2",
+      "content": "Reverter um deploy e feito pelo comando make rollback, nunca por force push.",
+      "collection": "instruction",
+      "tags": {
+        "skill": [
+          "deploy"
+        ]
+      }
+    },
+    {
+      "id": "tema-deploy-3",
+      "content": "A janela de implantacao combinada com o time e entre 9h e 11h em dia util.",
+      "collection": "decision",
+      "tags": {
+        "skill": [
+          "deploy"
+        ]
+      }
+    },
+    {
+      "id": "tema-banco-1",
+      "content": "O banco de producao e PostgreSQL 17 com a extensao pgvector habilitada.",
+      "collection": "fact",
+      "tags": {
+        "domain": [
+          "database"
+        ]
+      }
+    },
+    {
+      "id": "tema-banco-2",
+      "content": "Toda migracao de banco precisa de revisao humana antes de rodar.",
+      "collection": "instruction",
+      "tags": {
+        "domain": [
+          "database"
+        ]
+      }
+    },
+    {
+      "id": "tema-banco-3",
+      "content": "O backup do banco roda diariamente as 3h e fica retido por 30 dias.",
+      "collection": "fact",
+      "tags": {
+        "domain": [
+          "database"
+        ]
+      }
+    },
+    {
+      "id": "tema-seguranca-1",
+      "content": "As chaves de API ficam em variavel de ambiente, nunca no repositorio.",
+      "collection": "rule",
+      "tags": {
+        "domain": [
+          "security"
+        ]
+      }
+    },
+    {
+      "id": "tema-seguranca-2",
+      "content": "A autenticacao do painel usa OAuth com provedor proprio.",
+      "collection": "fact",
+      "tags": {
+        "domain": [
+          "security"
+        ]
+      }
+    },
+    {
+      "id": "tema-seguranca-3",
+      "content": "Revisao de seguranca e obrigatoria antes de expor qualquer servico na rede.",
+      "collection": "instruction",
+      "tags": {
+        "domain": [
+          "security"
+        ]
+      }
+    },
+    {
+      "id": "tema-frontend-1",
+      "content": "O painel web usa React com Tailwind e componentes proprios.",
+      "collection": "fact",
+      "tags": {
+        "domain": [
+          "frontend"
+        ]
+      }
+    },
+    {
+      "id": "tema-frontend-2",
+      "content": "A paleta do produto foi definida em agosto de 2026 e nao deve mudar sem aprovacao.",
+      "collection": "decision",
+      "tags": {
+        "domain": [
+          "frontend"
+        ]
+      }
+    },
+    {
+      "id": "tema-frontend-3",
+      "content": "Componentes novos do painel passam por revisao de codigo antes de virar padrao.",
+      "collection": "instruction",
+      "tags": {
+        "domain": [
+          "frontend"
+        ]
+      }
+    }
+  ],
+  "sessoes": [
+    {
+      "escopo": "deploy",
+      "turnos": [
+        "como funciona a implantacao aqui?",
+        "e se eu precisar reverter?",
+        "qual a janela combinada para implantar?"
+      ],
+      "relevantes": [
+        "tema-deploy-1",
+        "tema-deploy-2",
+        "tema-deploy-3"
+      ]
+    },
+    {
+      "escopo": "database",
+      "turnos": [
+        "qual banco de dados a gente usa?",
+        "como trato as migracoes?",
+        "e o backup, existe?"
+      ],
+      "relevantes": [
+        "tema-banco-1",
+        "tema-banco-2",
+        "tema-banco-3"
+      ]
+    },
+    {
+      "escopo": "security",
+      "turnos": [
+        "onde ficam as chaves de API?",
+        "como e a autenticacao do painel?",
+        "preciso de revisao de seguranca para expor isso?"
+      ],
+      "relevantes": [
+        "tema-seguranca-1",
+        "tema-seguranca-2",
+        "tema-seguranca-3"
+      ]
+    },
+    {
+      "escopo": "frontend",
+      "turnos": [
+        "qual stack do painel web?",
+        "posso mexer na paleta?",
+        "como entra um componente novo?"
+      ],
+      "relevantes": [
+        "tema-frontend-1",
+        "tema-frontend-2",
+        "tema-frontend-3"
+      ]
+    }
+  ]
+}

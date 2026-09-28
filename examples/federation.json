@@ -1,0 +1,20 @@
+{
+  "schema": "orkmind.federation/v1",
+  "identity_source": "orkastery",
+  "sources": [
+    {
+      "name": "orkastery",
+      "project": "orkastery",
+      "producer": "ork",
+      "backend": "pgvector",
+      "database_url_env": "ORKASTERY_ORKMIND_DATABASE_URL"
+    },
+    {
+      "name": "orkmind",
+      "project": "orkmind",
+      "producer": "shared",
+      "backend": "pgvector",
+      "database_url_env": "ORKMIND_DATABASE_URL"
+    }
+  ]
+}

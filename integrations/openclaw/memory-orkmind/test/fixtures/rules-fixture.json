@@ -1,0 +1,26 @@
+[
+  {
+    "content": "Nunca rodar rm -rf em ambiente de producao sem aprovacao humana.",
+    "collection": "rule",
+    "priority": "critical",
+    "tags": { "domain": ["infra"] }
+  },
+  {
+    "content": "Toda comunicacao com o dono e em portugues brasileiro, sem em-dash.",
+    "collection": "rule",
+    "priority": "critical",
+    "tags": { "domain": ["comunicacao"] }
+  },
+  {
+    "content": "Revisar toda migracao de banco antes de aplicar em qualquer ambiente.",
+    "collection": "instruction",
+    "priority": "high",
+    "tags": { "domain": ["database"] }
+  },
+  {
+    "content": "Registrar decisoes de arquitetura no repositorio antes de implementar.",
+    "collection": "instruction",
+    "priority": "medium",
+    "tags": {}
+  }
+]
