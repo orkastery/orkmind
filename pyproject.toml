@@ -7,7 +7,7 @@ name = "orkmind"
 version = "0.3.0"
 description = "Semantic memory layer for AI agents -- typed ontology, deterministic tag search, and mandatory rule injection."
 readme = "README.md"
-license = "Apache-2.0"
+license = "MIT"
 requires-python = ">=3.11"
 authors = [
     { name = "Orkastery", email = "orkmind@orkastery.dev" },
@@ -60,9 +60,9 @@ orkmind = "orkmind.cli.main:cli"
 orkmind-memory-mcp = "orkmind.memory_provider.mcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/Orkastery/OrkMind"
-Repository = "https://github.com/Orkastery/OrkMind"
-Issues = "https://github.com/Orkastery/OrkMind/issues"
+Homepage = "https://orkmind.com"
+Repository = "https://github.com/orkastery/orkmind"
+Issues = "https://github.com/orkastery/orkmind/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/orkmind"]
