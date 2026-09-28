@@ -20,7 +20,7 @@
 ```bash
 pip install "orkmind>=0.3.0"
 bash scripts/setup_postgres.sh        # PostgreSQL + pgvector no Docker (ou use o seu)
-export ORKMIND_DATABASE_URL="postgresql://orkmind:<senha>@localhost:5432/orkmind"
+export ORKMIND_DATABASE_URL="postgresql://orkmind:senha@localhost:5432/orkmind"
 orkmind add --collection rule --content "Nunca rode rm -rf em produção" \
   --tags '{"skill": ["deploy"]}' --mandatory
 orkmind search --tags '{"skill": ["deploy"]}'
@@ -75,7 +75,7 @@ Aponte o OrkMind para o banco com `ORKMIND_DATABASE_URL`, ou com `~/.orkmind/con
 ```toml
 [store]
 backend = "pgvector"                                     # padrão
-database_url = "postgresql://orkmind:<senha>@localhost:5432/orkmind"
+database_url = "postgresql://orkmind:senha@localhost:5432/orkmind"
 
 [server]
 log_level = "INFO"
@@ -147,7 +147,7 @@ expõe `memory_search` e `memory_get`.
 
 ```bash
 pip install "orkmind[memory-provider]>=0.3.0"
-export ORKMIND_PROVIDER_DATABASE_URL=postgresql://usuario:<senha>@localhost:5433/memory_provider
+export ORKMIND_PROVIDER_DATABASE_URL=postgresql://usuario:senha@localhost:5433/memory_provider
 python examples/memory_provider.py
 ```
 

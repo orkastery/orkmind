@@ -19,7 +19,7 @@
 ```bash
 pip install "orkmind>=0.3.0"
 bash scripts/setup_postgres.sh        # PostgreSQL + pgvector in Docker (or bring your own)
-export ORKMIND_DATABASE_URL="postgresql://orkmind:<password>@localhost:5432/orkmind"
+export ORKMIND_DATABASE_URL="postgresql://orkmind:password@localhost:5432/orkmind"
 orkmind add --collection rule --content "Never run rm -rf in production" \
   --tags '{"skill": ["deploy"]}' --mandatory
 orkmind search --tags '{"skill": ["deploy"]}'
@@ -94,7 +94,7 @@ Point OrkMind at the database with `ORKMIND_DATABASE_URL`, or with `~/.orkmind/c
 ```toml
 [store]
 backend = "pgvector"                                     # default
-database_url = "postgresql://orkmind:<password>@localhost:5432/orkmind"
+database_url = "postgresql://orkmind:password@localhost:5432/orkmind"
 
 [server]
 log_level = "INFO"
@@ -132,7 +132,7 @@ MCP configuration for Claude Code:
     "orkmind": {
       "command": "python",
       "args": ["-m", "orkmind.mcp"],
-      "env": { "ORKMIND_DATABASE_URL": "postgresql://orkmind:<password>@localhost:5432/orkmind" }
+      "env": { "ORKMIND_DATABASE_URL": "postgresql://orkmind:password@localhost:5432/orkmind" }
     }
   }
 }
@@ -180,7 +180,7 @@ documents (Markdown with wikilinks and frontmatter, text, CSV, PDF, DOCX). The d
 
 ```bash
 pip install "orkmind[memory-provider]>=0.3.0"
-export ORKMIND_PROVIDER_DATABASE_URL=postgresql://user:<password>@localhost:5433/memory_provider
+export ORKMIND_PROVIDER_DATABASE_URL=postgresql://user:password@localhost:5433/memory_provider
 python examples/memory_provider.py
 ```
 
