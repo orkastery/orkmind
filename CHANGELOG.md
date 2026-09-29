@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Company Brain, modo `context` da seleção**: a seleção com `mode: context` deixa de responder
+  `brain.selection.context-unsupported` e devolve o pacote de contexto citável
+  `orkmind.company-brain-context/v1`: os ids pedidos e os pais que a concessão deixa ver, cada um
+  com a citação inteira, e lacunas tipadas (`entity.unknown`, `entity.withheld`,
+  `citation.incomplete`, `owner.unresolved`, `observed.unknown`, `recorded.unknown`). Cada id
+  resolve com a semântica do `get`; roda numa transação `REPEATABLE READ, READ ONLY`; o digest é o
+  sha256 do JSON canônico. `capabilities` declara `selection_modes`.
+- **Company Brain, histórico**: a operação `history` da API devolve as versões append-only de uma
+  entidade em ordem de sequência, com a origem de cada uma (fonte, produtor, evento, thread e fase
+  do ciclo, horário de gravação) e a marca `rolled_back`. Exige a ação `history` na concessão.
+- **Documentação do Company Brain v1** em `docs/company-brain.md`.
+
+O contrato `orkmind.company-brain/v1` não muda: as duas adições são da API
+`orkmind.company-brain-api/v1`.
+
 ## [0.4.0] - 2026-09-29
 
 ### Added

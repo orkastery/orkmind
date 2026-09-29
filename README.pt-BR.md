@@ -153,6 +153,23 @@ python examples/memory_provider.py
 
 Veja [docs/memory-provider/README.md](docs/memory-provider/README.md).
 
+## Company Brain
+
+O Company Brain é a projeção exata e governada do que uma fábrica de software sabe sobre o próprio
+portfólio (produtos, projetos e iniciativas), com captura determinística, proveniência por item,
+recibos por etapa e histórico append-only. O contrato, `orkmind.company-brain/v1`, é o mesmo
+arquivo no OrkMind e no Orkastery, e a identidade vem só do login autenticado no banco, nunca de
+um campo da requisição. O `orkmind brain request` (e a ferramenta MCP `orkmind_brain`) responde
+`get`, `query`, `history` e o pacote de contexto citável: o modo `context` da seleção devolve as
+entidades pedidas e os pais visíveis com a citação inteira, num instantâneo somente leitura, e
+transforma o que não tem citação em lacuna tipada.
+
+```bash
+echo '{"schema":"orkmind.company-brain-api/v1","operation":"capabilities"}' | orkmind brain request
+```
+
+Veja [docs/company-brain.md](docs/company-brain.md).
+
 ## Desenvolvimento
 
 ```bash
@@ -172,6 +189,7 @@ banco cujo nome o marque como banco de teste.
 - [Memória federada](docs/federation.md): armazenamento por projeto, recall compartilhado e ACL de perfis
 - [Gravação garantida](docs/sempre-gravar.md): fila, drenador, API idempotente
 - [Memory Provider nativo](docs/memory-provider/README.md)
+- [Company Brain v1](docs/company-brain.md): contrato, identidade, concessões, modo context e histórico
 - [Benchmark](bench/README.md): método, métricas e o que ele não prova
 - [Changelog](CHANGELOG.md)
 
