@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-29
+
+### Added
+
+- **Escrita em nome de uma pessoa no Memory Provider**: `ingest_document(..., writer=escopo)`
+  e `ingest_bytes(..., writer=escopo)` só gravam o que quem escreve conseguiria ler.
+  Classificação fora do alcance levanta `ClassificationOutOfReachError` antes de fatiar ou gerar
+  embedding; slug de documento que a pessoa não lê levanta `SlugUnavailableError`, sem revelar o
+  documento que o ocupa. As duas recusas herdam de `WriteOutOfScopeError`. A deduplicação por
+  conteúdo não atravessa escopo, e `suggest_documents()` completa `[[link]]` só com o que o
+  escopo vê. Ver `docs/memory-provider/README.md`.
+
 ## [0.3.0] - 2026-09-28
 
 ### Changed
@@ -62,11 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Tags semanticas** (`wiki_document_tags`): tabela propria, com origem
     (frontmatter/inline/ingest) e hierarquia por barra — `rede` traz
     `rede/backbone` sem ninguem declarar a tag-mae.
-  - **Escrita em nome de uma pessoa**: `ingest_document(..., writer=escopo)` e
-    `ingest_bytes()` só gravam o que quem escreve conseguiria ler
-    (`ClassificationOutOfReachError`, `SlugUnavailableError`, ambos
-    `WriteOutOfScopeError`); deduplicação por conteúdo não atravessa escopo.
-    `suggest_documents()` completa `[[link]]` com o que o escopo vê.
   - Tools MCP `memory_links` e `memory_tags`; `memory_index` ganhou
     `pendentes`. `content_format` passou a aceitar `docx_text` (DOCX era
     recusado pelo CHECK da tabela).

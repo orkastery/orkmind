@@ -7,7 +7,7 @@
 > **In one sentence:** OrkMind is typed, governed memory for AI agents: the rules that matter
 > always reach the model, retrieval is deterministic, and history is never rewritten.
 
-- **Status:** 0.3.0, alpha · on PyPI as [`orkmind`](https://pypi.org/project/orkmind/) ·
+- **Status:** 0.4.0, alpha · on PyPI as [`orkmind`](https://pypi.org/project/orkmind/) ·
   [changes per version](CHANGELOG.md)
 - **Proof:** CI on every pull request runs the test suite without a database on Python 3.11 and
   3.12, checks the sdist and the wheel, and tests the OpenClaw plugin.
