@@ -1,6 +1,6 @@
 # Lint e estilo
 
-> **Em uma frase:** o ruff confere o Python com as regras do `pyproject.toml`; rode-o nos arquivos que você mudou e não acrescente erro, porque a árvore tem dívida anterior e o CI não roda lint.
+> **Em uma frase:** o ruff confere o Python com as regras do `pyproject.toml`; rode-o nos arquivos que você mudou e não acrescente erro, porque o CI não roda lint e a árvore pode ter dívida anterior.
 
 ## O que confere o quê
 

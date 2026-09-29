@@ -306,12 +306,12 @@ def test_blocos_rodam_com_home_vazio(tmp_path: Path, monkeypatch: pytest.MonkeyP
 
 
 def test_python_da_checagem_vem_primeiro_no_path(tmp_path: Path) -> None:
-    esperado = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "python")
+    esperado = os.path.dirname(os.path.abspath(sys.executable))
     guia = f"""
     # Guia
 
     ```bash
-    test "$(command -v python)" = "{esperado}"
+    test "${{PATH%%:*}}" = "{esperado}"
     ```
     """
     assert _checar(_arvore(tmp_path, guia)).falhas == []
@@ -329,12 +329,32 @@ def test_pipe_que_falha_a_esquerda_reprova(tmp_path: Path) -> None:
     assert len(falhas) == 1 and '"false | cat" saiu 1' in falhas[0]
 
 
-def test_bloco_nao_espera_stdin_e_o_prazo_mata_o_bloco(tmp_path: Path) -> None:
+def test_bloco_nao_herda_o_stdin_da_checagem(tmp_path: Path) -> None:
+    # O pytest ja poe /dev/null no fd 0: sem um pipe aberto ali, `cat` nunca esperaria.
+    leitura, escrita = os.pipe()
+    salvo = os.dup(0)
+    os.dup2(leitura, 0)
+    try:
+        guia = """
+        # Guia
+
+        ```bash
+        cat
+        ```
+        """
+        resultado = checar_guias.checar(_arvore(tmp_path, guia), prazo_total_s=3, cli=CLI)
+    finally:
+        os.dup2(salvo, 0)
+        for fd in (salvo, leitura, escrita):
+            os.close(fd)
+    assert resultado.falhas == []
+
+
+def test_o_prazo_mata_o_bloco(tmp_path: Path) -> None:
     guia = """
     # Guia
 
     ```bash
-    cat
     sleep 30
     ```
     """

@@ -346,7 +346,7 @@ def rodar(raiz: Path, comando: str, prazo_s: int, ambiente: dict[str, str]) -> E
         saida, _ = proc.communicate()
         status = f"pelo prazo ({prazo_s} s)"
     except BaseException:
-        # Ctrl-C ou SIGTERM na checagem nao deixa o bloco orfao.
+        # Ctrl-C, SIGTERM ou SIGHUP na checagem nao deixa o bloco orfao.
         matar_grupo(proc)
         proc.communicate()
         raise
@@ -586,12 +586,13 @@ def _checar(
 
 
 def _encerrar(sinal: int, _quadro: object) -> None:
-    # SIGTERM vira SystemExit: o `rodar` mata o grupo do bloco antes de a checagem sair.
+    # SIGTERM e SIGHUP viram SystemExit: o `rodar` mata o grupo do bloco antes de a checagem sair.
     raise SystemExit(128 + sinal)
 
 
 def main(argv: list[str] | None = None) -> int:
     signal.signal(signal.SIGTERM, _encerrar)
+    signal.signal(signal.SIGHUP, _encerrar)
     parser = argparse.ArgumentParser(description="Confere os guias de contribuicao.")
     parser.add_argument("raiz", nargs="?", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--so-existencia", action="store_true",

@@ -65,7 +65,7 @@ orkmind --help
 
 `--help` é a fonte de verdade dos comandos; cada comando tem o seu, como `orkmind store --help`.
 
-Os comandos que abrem o store leem o backend de `ORKMIND_DATABASE_URL` ou do `~/.orkmind/config.toml`. Sem nenhum dos dois, eles saem 1 dizendo o que falta. `orkmind store info`, que o [modelo de bug](../../.github/ISSUE_TEMPLATE/bug_report.yml) pede, mostra o backend configurado e as capacidades que ele declara:
+Os comandos que abrem o store usam o backend de `ORKMIND_STORE_BACKEND` ou de `[store].backend` no `~/.orkmind/config.toml`, que por padrão é o `pgvector`, com a DSN de `ORKMIND_DATABASE_URL` ou do mesmo arquivo. Sem DSN, eles saem 1, com um traceback que termina dizendo o que falta. `orkmind store info`, que o [modelo de bug](../../.github/ISSUE_TEMPLATE/bug_report.yml) pede, mostra o backend configurado e as capacidades que ele declara:
 
 <!-- checagem: citado -->
 
