@@ -37,3 +37,29 @@ class DocumentNotFoundError(MemoryProviderError):
     Os dois casos devolvem o mesmo erro de proposito: distinguir "nao existe"
     de "voce nao pode ver" ja vaza a existencia de um documento sigiloso.
     """
+
+
+class WriteOutOfScopeError(MemoryProviderError):
+    """Escrita que sairia do alcance de quem escreve.
+
+    A regra da escrita e a da leitura: quem grava so grava o que conseguiria
+    ler. Sem ela, qualquer papel poderia sobrescrever um documento sigiloso
+    reaproveitando o slug, ou rebaixar a classificacao dele no caminho.
+    """
+
+
+class ClassificationOutOfReachError(WriteOutOfScopeError):
+    """A classificacao pedida ficaria fora do alcance do proprio escritor.
+
+    Nivel acima do papel dele ou departamentos que ele nao le. Recusado antes
+    de fatiar ou chamar a API de embedding.
+    """
+
+
+class SlugUnavailableError(WriteOutOfScopeError):
+    """O slug ja pertence a um documento fora do alcance de quem escreve.
+
+    Slug e unico no acervo inteiro, entao dizer "em uso" e o minimo que a
+    recusa precisa revelar. Nada alem disso sai: nem titulo, nem nivel, nem
+    departamento do documento que ocupa o nome.
+    """

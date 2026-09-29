@@ -62,6 +62,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Tags semanticas** (`wiki_document_tags`): tabela propria, com origem
     (frontmatter/inline/ingest) e hierarquia por barra — `rede` traz
     `rede/backbone` sem ninguem declarar a tag-mae.
+  - **Escrita em nome de uma pessoa**: `ingest_document(..., writer=escopo)` e
+    `ingest_bytes()` só gravam o que quem escreve conseguiria ler
+    (`ClassificationOutOfReachError`, `SlugUnavailableError`, ambos
+    `WriteOutOfScopeError`); deduplicação por conteúdo não atravessa escopo.
+    `suggest_documents()` completa `[[link]]` com o que o escopo vê.
   - Tools MCP `memory_links` e `memory_tags`; `memory_index` ganhou
     `pendentes`. `content_format` passou a aceitar `docx_text` (DOCX era
     recusado pelo CHECK da tabela).

@@ -27,7 +27,7 @@ from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from orkmind.memory_provider.models.schemas import MemoryScopeFilter
-from orkmind.memory_provider.services.notes import NoteLink
+from orkmind.memory_provider.services.notes import NoteLink, slugify
 from orkmind.memory_provider.services.scope import document_scope_args, document_scope_clause
 
 # Mesmo formato do CHECK da tabela: tag invalida e descartada, nao derruba a
@@ -107,6 +107,30 @@ LIMIT $5
 """
 
 
+# Completar `[[link]]`: comeco do slug primeiro, depois titulo que comeca com o
+# que foi digitado, depois qualquer ocorrencia. Empate vai para o mais recente.
+_SUGGEST_SQL = f"""
+SELECT d.slug, d.title, d.doc_type
+FROM wiki_documents d
+WHERE {document_scope_clause("d", 1)}
+  AND (
+    $4::text = ''
+    OR d.slug LIKE '%' || $4::text || '%'
+    OR d.title ILIKE '%' || $5::text || '%'
+  )
+ORDER BY
+  (d.slug LIKE $4::text || '%') DESC,
+  (d.title ILIKE $5::text || '%') DESC,
+  d.updated_at DESC
+LIMIT $6
+"""
+
+
+def _like_literal(value: str) -> str:
+    """Texto digitado vira literal de LIKE: `%` e `_` deixam de ser curinga."""
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 async def replace_links(conn: asyncpg.Connection, document_id: UUID, links: list[NoteLink]) -> int:
     """Troca as arestas que saem do documento. Derivadas: refazer e seguro."""
     await conn.execute("DELETE FROM wiki_links WHERE source_document_id = $1", document_id)
@@ -178,6 +202,32 @@ class LinkService:
         """Todas as tags visiveis com contagem; `prefix` desce na hierarquia."""
         rows = await self._pool.fetch(_LIST_TAGS_SQL, *document_scope_args(scope), prefix, limit)
         return [dict(r) for r in rows]
+
+    async def suggest(
+        self, query: str, scope: MemoryScopeFilter, limit: int = 8
+    ) -> list[dict[str, Any]]:
+        """Candidatos a alvo de `[[link]]`, entre o que o escopo ve."""
+        texto = query.strip()
+        # Texto que nao gera slug nenhum (so pontuacao) nao pode virar "vazio",
+        # que no SQL significa "sem filtro". "!" nunca aparece num slug.
+        filtro_slug = (slugify(texto) or "!") if texto else ""
+        rows = await self._pool.fetch(
+            _SUGGEST_SQL,
+            *document_scope_args(scope),
+            filtro_slug,
+            _like_literal(texto),
+            limit,
+        )
+        return [
+            {
+                "slug": r["slug"],
+                "title": r["title"],
+                "doc_type": r["doc_type"],
+                # O titulo so serve de texto do link quando resolve para este slug.
+                "link": r["title"] if slugify(r["title"]) == r["slug"] else r["slug"],
+            }
+            for r in rows
+        ]
 
     async def by_tag(
         self, tag: str, scope: MemoryScopeFilter, limit: int = 50

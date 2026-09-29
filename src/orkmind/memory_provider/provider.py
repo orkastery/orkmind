@@ -56,7 +56,7 @@ from orkmind.memory_provider.models.schemas import (
     UserContext,
 )
 from orkmind.memory_provider.services.core_memory import CoreMemoryService
-from orkmind.memory_provider.services.extraction import SUPPORTED_SUFFIXES, extract_file
+from orkmind.memory_provider.services.extraction import SUPPORTED_SUFFIXES, extract_bytes
 from orkmind.memory_provider.services.graph import GraphService
 from orkmind.memory_provider.services.ingestion import IngestionService
 from orkmind.memory_provider.services.links import LinkService
@@ -258,9 +258,23 @@ class NativeMemoryProvider:
         scope = self._guarded(scope_filter, user_context)
         return await self.retrieval.get_document(slug_or_id, scope)
 
-    async def ingest_document(self, request: DocumentIngestRequest) -> IngestResult:
-        """Ingestao direta: espera terminar e devolve o resultado."""
-        return await self.ingestion.ingest(request)
+    async def ingest_document(
+        self,
+        request: DocumentIngestRequest,
+        *,
+        writer: MemoryScopeFilter | None = None,
+        user_context: UserContext | None = None,
+    ) -> IngestResult:
+        """Ingestao direta: espera terminar e devolve o resultado.
+
+        `writer` e o escopo de quem escreve, para escrita feita em nome de uma
+        pessoa (a web, um canal). Com ele vale "so grava o que conseguiria ler":
+        classificacao fora do alcance levanta `ClassificationOutOfReachError` e
+        slug de documento que ele nao le levanta `SlugUnavailableError`. Sem
+        `writer` e ingestao de sistema, como sempre foi.
+        """
+        scope = None if writer is None else self._guarded(writer, user_context)
+        return await self.ingestion.ingest(request, writer=scope)
 
     def submit_document(self, request: DocumentIngestRequest) -> IngestJob:
         """Ingestao em segundo plano: devolve na hora, sem travar o canal."""
@@ -271,6 +285,52 @@ class NativeMemoryProvider:
 
     async def retire_document(self, slug: str, *, actor: str) -> bool:
         return await self.ingestion.retire(slug, actor=actor)
+
+    async def ingest_bytes(
+        self,
+        data: bytes,
+        filename: str,
+        *,
+        slug: str | None = None,
+        doc_type: str = "note",
+        access_level: AccessLevel = AccessLevel.OPERATIONAL,
+        department_scope: list[str] | None = None,
+        index_paths: list[str] | None = None,
+        ingested_by: str = "system",
+        force_update: bool = False,
+        source: str | None = None,
+        writer: MemoryScopeFilter | None = None,
+        user_context: UserContext | None = None,
+    ) -> IngestResult:
+        """Ingere o conteudo de um arquivo que nao esta no disco (upload, anexo).
+
+        Mesmo tratamento de `ingest_file`: o formato sai da extensao de
+        `filename`, o titulo e as tags saem do proprio conteudo quando ele traz.
+        `source` e o que fica registrado como origem - para um upload, o nome
+        que a pessoa enviou, nunca um caminho temporario do servidor.
+        """
+        extraido = await asyncio.to_thread(extract_bytes, data, filename)
+        nome = Path(filename)
+        note = parse_note(extraido.text) if extraido.content_format == "markdown" else None
+        titulo = (note.title if note else None) or nome.stem
+        return await self.ingest_document(
+            DocumentIngestRequest(
+                slug=slug or slugify(nome.stem),
+                title=titulo,
+                doc_type=doc_type,
+                raw_content=extraido.text,
+                content_format=extraido.content_format,  # type: ignore[arg-type]
+                source_url_or_path=source,
+                access_level=access_level,
+                department_scope=department_scope or [],
+                metadata={**extraido.metadata, "source_filename": nome.name, "bytes": len(data)},
+                index_paths=index_paths or [],
+                ingested_by=ingested_by,
+                force_update=force_update,
+            ),
+            writer=writer,
+            user_context=user_context,
+        )
 
     async def ingest_file(
         self,
@@ -290,24 +350,18 @@ class NativeMemoryProvider:
         proprio arquivo quando ele traz (frontmatter, H1, `#tag`).
         """
         caminho = Path(path)
-        extraido = await asyncio.to_thread(extract_file, caminho)
-        note = parse_note(extraido.text) if extraido.content_format == "markdown" else None
-        titulo = (note.title if note else None) or caminho.stem
-        return await self.ingest_document(
-            DocumentIngestRequest(
-                slug=slug or slugify(caminho.stem),
-                title=titulo,
-                doc_type=doc_type,
-                raw_content=extraido.text,
-                content_format=extraido.content_format,  # type: ignore[arg-type]
-                source_url_or_path=str(caminho.resolve()),
-                access_level=access_level,
-                department_scope=department_scope or [],
-                metadata=extraido.metadata,
-                index_paths=index_paths or [],
-                ingested_by=ingested_by,
-                force_update=force_update,
-            )
+        data = await asyncio.to_thread(caminho.read_bytes)
+        return await self.ingest_bytes(
+            data,
+            caminho.name,
+            slug=slug,
+            doc_type=doc_type,
+            access_level=access_level,
+            department_scope=department_scope,
+            index_paths=index_paths,
+            ingested_by=ingested_by,
+            force_update=force_update,
+            source=str(caminho.resolve()),
         )
 
     async def ingest_vault(
@@ -439,6 +493,22 @@ class NativeMemoryProvider:
     ) -> list[dict[str, Any]]:
         """Documentos com a tag e com as filhas dela (`rede` traz `rede/backbone`)."""
         return await self.links.by_tag(tag, self._guarded(scope_filter, user_context), limit)
+
+    async def suggest_documents(
+        self,
+        query: str,
+        scope_filter: MemoryScopeFilter,
+        *,
+        user_context: UserContext | None = None,
+        limit: int = 8,
+    ) -> list[dict[str, Any]]:
+        """Documentos para completar um `[[link]]` enquanto a pessoa digita.
+
+        So o que o escopo ve. Cada item traz `link`: o texto que, entre
+        colchetes, resolve para aquele documento - o titulo quando ele vira o
+        proprio slug, senao o slug. Assim o link escrito nunca fica pendurado.
+        """
+        return await self.links.suggest(query, self._guarded(scope_filter, user_context), limit)
 
     # -- Meta-indice ----------------------------------------------------------
 

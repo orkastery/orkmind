@@ -10,12 +10,15 @@ Depende do extra `orkmind[memory-provider]` (asyncpg).
 from orkmind.memory_provider.config import ChunkingOptions, MemoryProviderSettings
 from orkmind.memory_provider.embeddings import HashingEmbeddingProvider
 from orkmind.memory_provider.errors import (
+    ClassificationOutOfReachError,
     CoreMemoryMissingError,
     DocumentNotFoundError,
     EmbeddingDimensionError,
     IngestionQueueFullError,
     MemoryProviderError,
     SchemaMismatchError,
+    SlugUnavailableError,
+    WriteOutOfScopeError,
 )
 from orkmind.memory_provider.models.schemas import (
     AccessLevel,
@@ -42,6 +45,7 @@ __all__ = [
     "ChatRole",
     "ChunkMetadata",
     "ChunkingOptions",
+    "ClassificationOutOfReachError",
     "CoreBlockLabel",
     "CoreMemoryBlock",
     "CoreMemoryMissingError",
@@ -61,7 +65,9 @@ __all__ = [
     "SchemaMismatchError",
     "SearchResponse",
     "SearchResult",
+    "SlugUnavailableError",
     "SystemContext",
     "TurnContext",
     "UserContext",
+    "WriteOutOfScopeError",
 ]

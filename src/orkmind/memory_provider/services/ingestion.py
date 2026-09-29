@@ -34,7 +34,11 @@ from uuid import UUID, uuid4
 from orkmind.embeddings.provider import EmbeddingProvider
 from orkmind.memory_provider.config import MemoryProviderSettings
 from orkmind.memory_provider.embeddings import embed_texts
-from orkmind.memory_provider.errors import IngestionQueueFullError
+from orkmind.memory_provider.errors import (
+    ClassificationOutOfReachError,
+    IngestionQueueFullError,
+    SlugUnavailableError,
+)
 from orkmind.memory_provider.models.schemas import (
     ChunkMetadata,
     DocumentIngestRequest,
@@ -42,11 +46,17 @@ from orkmind.memory_provider.models.schemas import (
     IngestJobState,
     IngestResult,
     IngestStatus,
+    MemoryScopeFilter,
 )
 from orkmind.memory_provider.services.chunking import Chunk, chunk_document
 from orkmind.memory_provider.services.links import replace_links, replace_tags, resolve_pending
 from orkmind.memory_provider.services.meta_index import MetaIndexService
 from orkmind.memory_provider.services.notes import ParsedNote, parse_note
+from orkmind.memory_provider.services.scope import (
+    classification_reach_sql,
+    document_scope_args,
+    document_scope_clause,
+)
 
 if TYPE_CHECKING:  # pragma: no cover - so para anotacao
     import asyncpg
@@ -61,6 +71,19 @@ SELECT id, slug, title, doc_type, source_url_or_path, content_format, content_ha
        version, access_level, department_scope, status, metadata, chunk_count
 FROM wiki_documents
 """
+
+# Duplicata por conteudo, so entre o que quem escreve alcanca. Fora do alcance
+# ela nao existe para ele: apontar para la entregaria o slug de um documento
+# sigiloso, e recusar a gravacao deixaria o escritor sem o proprio documento.
+_SELECT_DUP_IN_REACH = f"""
+SELECT d.slug
+FROM wiki_documents d
+WHERE d.content_hash = $4 AND {document_scope_clause("d", 1)}
+ORDER BY d.created_at
+LIMIT 1
+"""
+
+_REACH_SQL = classification_reach_sql(1)
 
 _INSERT_CHUNK = """
 INSERT INTO wiki_chunks
@@ -140,14 +163,24 @@ class IngestionService:
 
     # -- ingestao direta ------------------------------------------------------
 
-    async def ingest(self, request: DocumentIngestRequest) -> IngestResult:
+    async def ingest(
+        self, request: DocumentIngestRequest, *, writer: MemoryScopeFilter | None = None
+    ) -> IngestResult:
+        """Grava o documento e devolve o que aconteceu.
+
+        `writer` e o escopo de quem escreve. Com ele, a escrita segue a regra da
+        leitura: a classificacao pedida tem de caber no alcance do escritor, o
+        slug nao pode pertencer a documento que ele nao le e a deduplicacao por
+        conteudo so olha o que ele alcanca. Sem `writer` (ingestao de sistema:
+        vault, fila, CLI) nada muda.
+        """
         started = perf_counter()
         content_hash = request.content_hash
         prepared: _Prepared | None = None
 
         while True:
             async with self._pool.acquire() as conn:
-                decision = await self._decide(conn, request, content_hash)
+                decision = await self._decide(conn, request, content_hash, writer)
             if decision.action is _Action.DUPLICATE:
                 return self._duplicate(decision, content_hash, started)
             if decision.action in (_Action.CREATE, _Action.UPDATE) and prepared is None:
@@ -164,7 +197,7 @@ class IngestionService:
                     "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
                     f"wiki:hash:{content_hash}",
                 )
-                decision = await self._decide(conn, request, content_hash)
+                decision = await self._decide(conn, request, content_hash, writer)
                 if decision.action is _Action.DUPLICATE:
                     return self._duplicate(decision, content_hash, started)
                 if decision.action is not _Action.METADATA and prepared is None:
@@ -265,9 +298,27 @@ class IngestionService:
     # -- decisao --------------------------------------------------------------
 
     async def _decide(
-        self, conn: asyncpg.Connection, request: DocumentIngestRequest, content_hash: str
+        self,
+        conn: asyncpg.Connection,
+        request: DocumentIngestRequest,
+        content_hash: str,
+        writer: MemoryScopeFilter | None = None,
     ) -> _Decision:
+        if writer is not None and not await _reaches(
+            conn, writer, request.access_level.value, request.department_scope
+        ):
+            raise ClassificationOutOfReachError(
+                f"classificacao {request.access_level.value} "
+                f"{request.department_scope or ['empresa toda']} fora do alcance de quem escreve"
+            )
         existing = await conn.fetchrow(_SELECT_DOC + "WHERE slug = $1", request.slug)
+        if existing is not None and writer is not None:
+            # Julgado pela classificacao, nao pelo status: um documento
+            # aposentado de outro nivel continua sendo de outro nivel.
+            if not await _reaches(
+                conn, writer, existing["access_level"], list(existing["department_scope"])
+            ):
+                raise SlugUnavailableError(f"slug {request.slug!r} ja esta em uso no acervo")
         if existing is not None:
             same_content = (
                 existing["status"] == "active"
@@ -283,11 +334,21 @@ class IngestionService:
             return _Decision(_Action.METADATA, existing)
 
         if not request.force_update:
-            other = await conn.fetchrow(
-                _SELECT_DOC
-                + "WHERE content_hash = $1 AND status = 'active' ORDER BY created_at LIMIT 1",
-                content_hash,
-            )
+            if writer is None:
+                other = await conn.fetchrow(
+                    _SELECT_DOC
+                    + "WHERE content_hash = $1 AND status = 'active' ORDER BY created_at LIMIT 1",
+                    content_hash,
+                )
+            else:
+                slug = await conn.fetchval(
+                    _SELECT_DUP_IN_REACH, *document_scope_args(writer), content_hash
+                )
+                other = (
+                    None
+                    if slug is None
+                    else await conn.fetchrow(_SELECT_DOC + "WHERE slug = $1", slug)
+                )
             if other is not None:
                 return _Decision(_Action.DUPLICATE, other, duplicate_of=other["slug"])
         return _Decision(_Action.CREATE)
@@ -497,3 +558,17 @@ class IngestionService:
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+async def _reaches(
+    conn: asyncpg.Connection,
+    scope: MemoryScopeFilter,
+    access_level: str,
+    department_scope: list[str],
+) -> bool:
+    """O escopo alcancaria esta classificacao? Mesma regra da leitura."""
+    return bool(
+        await conn.fetchval(
+            _REACH_SQL, *document_scope_args(scope), access_level, list(department_scope)
+        )
+    )
