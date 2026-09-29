@@ -1,0 +1,432 @@
+{
+  "description": "Pacote de contexto dourado do Company Brain (B4.2): o mesmo arquivo no OrkMind e no Orkastery. O OrkMind, semeado com seed, responde request com response; o Orkastery confere o digest e monta o pacote ork.brain-context/v1.",
+  "seed": {
+    "principal": {
+      "id": "person",
+      "tenant_id": "orkastery",
+      "kind": "human"
+    },
+    "entities": [
+      {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "orkastery",
+        "id": "prod-golden",
+        "kind": "prod",
+        "version": 1,
+        "parent_id": null,
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "orkastery",
+            "id": "prod-golden"
+          }
+        ],
+        "title": "Produto dourado",
+        "description": "Descrição que fica fora do pacote de contexto.",
+        "status": "delivered",
+        "acceptance_criteria": [
+          "critério que fica no get"
+        ],
+        "owner": {
+          "raw": null,
+          "state": "unknown",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "orkastery",
+          "source_ref": "portfolio.json#prod-golden",
+          "source_hash": "5c6fa07a30c4e55c7e36ab1a0d407197de40a2e04d3e5d2da57275fbefa0777d",
+          "source_version": 1,
+          "location": "id:prod-golden"
+        },
+        "acl_ref": "ork-factory",
+        "observed_at": null,
+        "recorded_at": null
+      },
+      {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "orkastery",
+        "id": "proj-golden-core",
+        "kind": "proj",
+        "version": 1,
+        "parent_id": "prod-golden",
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "orkastery",
+            "id": "proj-golden-core"
+          }
+        ],
+        "title": "Núcleo dourado ç 😀",
+        "description": "Descrição que fica fora do pacote de contexto.",
+        "status": "in_progress",
+        "acceptance_criteria": [
+          "critério que fica no get"
+        ],
+        "owner": {
+          "raw": "Equipe",
+          "state": "legacy-label",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "orkastery",
+          "source_ref": "portfolio.json#proj-golden-core",
+          "source_hash": "cb31308b490b66e14c0922609687da242beda640caaa9a44fa1a00dd5e7f489a",
+          "source_version": 1,
+          "location": "id:proj-golden-core"
+        },
+        "acl_ref": "ork-factory",
+        "observed_at": "2026-09-29T12:00:00Z",
+        "recorded_at": null
+      },
+      {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "orkastery",
+        "id": "init-golden-one",
+        "kind": "init",
+        "version": 1,
+        "parent_id": "proj-golden-core",
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "orkastery",
+            "id": "init-golden-one"
+          }
+        ],
+        "title": "Iniciativa citável",
+        "description": "Descrição que fica fora do pacote de contexto.",
+        "status": "in_progress",
+        "acceptance_criteria": [
+          "critério que fica no get"
+        ],
+        "owner": {
+          "raw": null,
+          "state": "unknown",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "orkastery",
+          "source_ref": "portfolio.json#init-golden-one",
+          "source_hash": "5d74720379b26ffc92dbc8da66006da538265cbccd97e20e554ecb8c9ba3c3bc",
+          "source_version": 1,
+          "location": "id:init-golden-one"
+        },
+        "acl_ref": "ork-factory",
+        "observed_at": "2026-09-29T12:00:00Z",
+        "recorded_at": "2026-09-29T12:00:01Z"
+      },
+      {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "orkastery",
+        "id": "init-golden-two",
+        "kind": "init",
+        "version": 1,
+        "parent_id": "proj-golden-core",
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "orkastery",
+            "id": "init-golden-two"
+          }
+        ],
+        "title": "Iniciativa retida",
+        "description": "Descrição que fica fora do pacote de contexto.",
+        "status": "in_progress",
+        "acceptance_criteria": [
+          "critério que fica no get"
+        ],
+        "owner": {
+          "raw": null,
+          "state": "unknown",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "orkastery",
+          "source_ref": "portfolio.json#init-golden-two",
+          "source_hash": "51029b2bdd3a34a3808af4676cfebc2093242f8df9a170f361208637f591afc8",
+          "source_version": 1,
+          "location": "id:init-golden-two"
+        },
+        "acl_ref": "ork-factory",
+        "observed_at": null,
+        "recorded_at": null
+      },
+      {
+        "schema": "orkmind.company-brain-entity/v1",
+        "tenant_id": "orkastery",
+        "id": "init-golden-three",
+        "kind": "init",
+        "version": 1,
+        "parent_id": "proj-golden-core",
+        "workspace_ids": [],
+        "depends_on": [],
+        "aliases": [
+          {
+            "system": "ork",
+            "instance": "orkastery",
+            "id": "init-golden-three"
+          }
+        ],
+        "title": "Iniciativa sem citação",
+        "description": "Descrição que fica fora do pacote de contexto.",
+        "status": "in_progress",
+        "acceptance_criteria": [
+          "critério que fica no get"
+        ],
+        "owner": {
+          "raw": null,
+          "state": "unknown",
+          "principal": null
+        },
+        "source": {
+          "authority": "ork",
+          "instance": "orkastery",
+          "source_ref": "portfolio.json#init-golden-three",
+          "source_hash": "9951fad27b4b214b9d7ba67ffe7a7f6f17d04c8c9e20953cde5546807d234946",
+          "source_version": 1,
+          "location": "id:init-golden-three"
+        },
+        "acl_ref": "ork-restricted",
+        "observed_at": null,
+        "recorded_at": null
+      }
+    ],
+    "grants": [
+      {
+        "acl_ref": "ork-factory",
+        "actions": [
+          "get",
+          "query"
+        ],
+        "resources": [
+          "prod-golden",
+          "proj-golden-core",
+          "init-golden-one",
+          "init-golden-two"
+        ],
+        "fields": [
+          "acceptance_criteria",
+          "acl_ref",
+          "aliases",
+          "depends_on",
+          "description",
+          "id",
+          "kind",
+          "observed_at",
+          "owner",
+          "parent_id",
+          "recorded_at",
+          "schema",
+          "source",
+          "status",
+          "tenant_id",
+          "title",
+          "version",
+          "workspace_ids"
+        ]
+      },
+      {
+        "acl_ref": "ork-restricted",
+        "actions": [
+          "get",
+          "query"
+        ],
+        "resources": [
+          "init-golden-three"
+        ],
+        "fields": [
+          "acceptance_criteria",
+          "acl_ref",
+          "aliases",
+          "depends_on",
+          "description",
+          "id",
+          "kind",
+          "observed_at",
+          "owner",
+          "parent_id",
+          "recorded_at",
+          "schema",
+          "status",
+          "tenant_id",
+          "title",
+          "version",
+          "workspace_ids"
+        ]
+      }
+    ],
+    "withheld": [
+      "init-golden-two"
+    ]
+  },
+  "request": {
+    "schema": "orkmind.company-brain-selection/v1",
+    "tenant_id": "orkastery",
+    "facets": {
+      "ids": [
+        "init-golden-absent",
+        "init-golden-one",
+        "init-golden-three",
+        "init-golden-two"
+      ],
+      "kinds": [],
+      "workspace_ids": [],
+      "source_instances": []
+    },
+    "mode": "context",
+    "limit": 4,
+    "offset": 0
+  },
+  "response": {
+    "schema": "orkmind.company-brain-api/v1",
+    "state": "ok",
+    "context": {
+      "schema": "orkmind.company-brain-context/v1",
+      "tenant_id": "orkastery",
+      "requested": [
+        "init-golden-absent",
+        "init-golden-one",
+        "init-golden-three",
+        "init-golden-two"
+      ],
+      "items": [
+        {
+          "id": "prod-golden",
+          "state": "ok",
+          "entity": {
+            "kind": "prod",
+            "version": 1,
+            "title": "Produto dourado",
+            "status": "delivered",
+            "parent_id": null,
+            "depends_on": [],
+            "owner": {
+              "raw": null,
+              "state": "unknown",
+              "principal": null
+            },
+            "source": {
+              "instance": "orkastery",
+              "location": "id:prod-golden",
+              "authority": "ork",
+              "source_ref": "portfolio.json#prod-golden",
+              "source_hash": "5c6fa07a30c4e55c7e36ab1a0d407197de40a2e04d3e5d2da57275fbefa0777d",
+              "source_version": 1
+            },
+            "observed_at": null,
+            "recorded_at": null
+          }
+        },
+        {
+          "id": "proj-golden-core",
+          "state": "ok",
+          "entity": {
+            "kind": "proj",
+            "version": 1,
+            "title": "Núcleo dourado ç 😀",
+            "status": "in_progress",
+            "parent_id": "prod-golden",
+            "depends_on": [],
+            "owner": {
+              "raw": "Equipe",
+              "state": "legacy-label",
+              "principal": null
+            },
+            "source": {
+              "instance": "orkastery",
+              "location": "id:proj-golden-core",
+              "authority": "ork",
+              "source_ref": "portfolio.json#proj-golden-core",
+              "source_hash": "cb31308b490b66e14c0922609687da242beda640caaa9a44fa1a00dd5e7f489a",
+              "source_version": 1
+            },
+            "observed_at": "2026-09-29T12:00:00Z",
+            "recorded_at": null
+          }
+        },
+        {
+          "id": "init-golden-one",
+          "state": "ok",
+          "entity": {
+            "kind": "init",
+            "version": 1,
+            "title": "Iniciativa citável",
+            "status": "in_progress",
+            "parent_id": "proj-golden-core",
+            "depends_on": [],
+            "owner": {
+              "raw": null,
+              "state": "unknown",
+              "principal": null
+            },
+            "source": {
+              "instance": "orkastery",
+              "location": "id:init-golden-one",
+              "authority": "ork",
+              "source_ref": "portfolio.json#init-golden-one",
+              "source_hash": "5d74720379b26ffc92dbc8da66006da538265cbccd97e20e554ecb8c9ba3c3bc",
+              "source_version": 1
+            },
+            "observed_at": "2026-09-29T12:00:00Z",
+            "recorded_at": "2026-09-29T12:00:01Z"
+          }
+        },
+        {
+          "id": "init-golden-two",
+          "state": "withheld"
+        }
+      ],
+      "gaps": [
+        {
+          "id": "init-golden-absent",
+          "code": "entity.unknown"
+        },
+        {
+          "id": "init-golden-one",
+          "code": "owner.unresolved"
+        },
+        {
+          "id": "init-golden-three",
+          "code": "citation.incomplete"
+        },
+        {
+          "id": "init-golden-two",
+          "code": "entity.withheld"
+        },
+        {
+          "id": "prod-golden",
+          "code": "observed.unknown"
+        },
+        {
+          "id": "prod-golden",
+          "code": "owner.unresolved"
+        },
+        {
+          "id": "prod-golden",
+          "code": "recorded.unknown"
+        },
+        {
+          "id": "proj-golden-core",
+          "code": "owner.unresolved"
+        },
+        {
+          "id": "proj-golden-core",
+          "code": "recorded.unknown"
+        }
+      ],
+      "digest": "600df4347eeb8d548d49fa062da0a53ebb9e8f355f6a6a7fa1604ded63d82e1a"
+    }
+  }
+}

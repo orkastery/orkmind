@@ -23,7 +23,8 @@ def request(value,store=None):
     if operation=='capabilities':
         contract=Path(__file__).resolve().parents[1]/'contracts/company-brain.v1.json'
         return dict(schema=API,state='ok',contract_hash=hashlib.sha256(contract.read_bytes()).hexdigest(),operations=sorted(OPERATIONS),
-            authority='ork',capture='deterministic',principal_source='authenticated-transport',human_context_required=['get','query'])
+            authority='ork',capture='deterministic',principal_source='authenticated-transport',human_context_required=['get','query'],
+            selection_modes=['selection','context'])
     if store is None: return dict(schema=API,state='unavailable',error='brain.transport.unavailable')
     try:
         if operation in ('get','receipts','head'):
@@ -43,7 +44,7 @@ def request(value,store=None):
     except PermissionError: return dict(schema=API,state='forbidden',error='brain.access.forbidden')
     except ValueError as error:
         code=str(error)
-        allowed={'brain.api.invalid','brain.contract.invalid','brain.event.conflict','brain.event.sequence-gap','brain.authority.conflict','brain.version.conflict','brain.catalog.parent-missing','brain.catalog.dependency-invalid','brain.receipt.missing'}
+        allowed={'brain.api.invalid','brain.contract.invalid','brain.event.conflict','brain.event.sequence-gap','brain.authority.conflict','brain.version.conflict','brain.catalog.parent-missing','brain.catalog.dependency-invalid','brain.receipt.missing','brain.context.invalid'}
         return dict(schema=API,state='conflict',error=code if code in allowed else 'brain.api.invalid')
     except Exception:
         return dict(schema=API,state='unavailable',error='brain.store.unavailable')

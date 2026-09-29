@@ -10,6 +10,23 @@ from psycopg.types.json import Jsonb
 from orkmind.core.company_brain import digest, validate
 from orkmind.core.company_brain_access import Principal, allows, project_fields
 
+# B4.2/D2: the context package carries the citable state of an entity; description, criteria and aliases stay behind get.
+CONTEXT_SCHEMA = 'orkmind.company-brain-context/v1'
+CONTEXT_FIELDS = ('kind','version','title','status','parent_id','depends_on','owner','source','observed_at','recorded_at')
+# D7: closed gap codes. The last three describe a cited item; the first three replace content.
+CONTEXT_GAPS = ('entity.unknown','entity.withheld','citation.incomplete','owner.unresolved','observed.unknown','recorded.unknown')
+CITATION = ('authority','instance','source_ref','source_hash','source_version','location')
+KIND_ORDER = {'prod':0,'proj':1,'init':2}
+
+
+def _kind(id):
+    return KIND_ORDER.get(id.split('-',1)[0])
+
+
+def _cited(source):
+    """A citation counts only whole; a projected-away or partial source is never content."""
+    return isinstance(source,dict) and all(source.get(k) not in (None,'') for k in CITATION)
+
 
 class BrainStore:
     def __init__(self, connection, principal=None, fault=None):
@@ -58,8 +75,8 @@ class BrainStore:
             raise ValueError('brain.contract.invalid')
         if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != selection['tenant_id']:
             return dict(state='forbidden',items=[])
-        if selection['mode'] != 'selection':
-            return dict(state='unavailable',error='brain.selection.context-unsupported',items=[])
+        if selection['mode'] == 'context':
+            return self.context(selection)
         facets=selection['facets']
         required={field for facet,field in [('ids','id'),('kinds','kind'),('workspace_ids','workspace_ids'),('source_instances','source')]
                   if facets[facet]}
@@ -96,6 +113,61 @@ class BrainStore:
             found.append(dict(state='withheld') if row['state']=='withheld' else dict(state='ok',entity=projected))
         start=selection['offset']; items=found[start:start+selection['limit']]
         return dict(state='ok' if items else 'empty',items=items,count=len(found))
+
+    def context(self, selection):
+        """B4.2: citable context package for requested ids plus visible parents (D2-D8).
+
+        Each id resolves with get semantics (D3): absent, deleted and ungranted are the same
+        entity.unknown; withheld keeps only the id. Parents come only from cited items, through the
+        projected parent_id and a strictly higher kind (D4). One read-only snapshot (D6)."""
+        facets=selection['facets'];ids=facets['ids']
+        if (not ids or facets['kinds'] or facets['workspace_ids'] or facets['source_instances'] or selection['offset'] != 0
+            or len(ids) > selection['limit'] or any(_kind(i) is None for i in ids)):
+            raise ValueError('brain.context.invalid')
+        tenant=selection['tenant_id'];requested=sorted(set(ids));resolved={}
+        with self.connection.transaction():
+            self.connection.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+            self.fault('context-snapshot')
+            grants={g['acl_ref']:g for g in self.connection.execute('SELECT * FROM brain_grants WHERE tenant_id=%s AND principal_id=%s',
+                                                                    (tenant,self.principal.id)).fetchall()}
+            pending=requested
+            while pending:
+                rows={r['id']:r for r in self.connection.execute('SELECT * FROM brain_projection WHERE tenant_id=%s AND id = ANY(%s)',
+                                                                 (tenant,pending)).fetchall()}
+                parents=set()
+                for id in pending:
+                    entry=resolved[id]=self._context_entry(rows.get(id),grants,tenant,id)
+                    parent=entry.get('parent_id') if isinstance(entry,dict) else None
+                    if isinstance(parent,str) and _kind(parent) is not None and _kind(parent) < _kind(id): parents.add(parent)
+                pending=sorted(parents-set(resolved))
+        items,gaps=[],[]
+        for id,entry in resolved.items():
+            if entry is None: gaps.append(dict(id=id,code='entity.unknown'))
+            elif entry=='withheld': items.append(dict(id=id,state='withheld'));gaps.append(dict(id=id,code='entity.withheld'))
+            elif entry=='uncited': gaps.append(dict(id=id,code='citation.incomplete'))
+            else:
+                items.append(dict(id=id,state='ok',entity=entry))
+                owner=entry.get('owner')
+                if not isinstance(owner,dict) or owner.get('principal') is None: gaps.append(dict(id=id,code='owner.unresolved'))
+                if entry.get('observed_at') is None: gaps.append(dict(id=id,code='observed.unknown'))
+                if entry.get('recorded_at') is None: gaps.append(dict(id=id,code='recorded.unknown'))
+        # Code point order on ASCII identifiers: the same order the factory core computes.
+        items.sort(key=lambda i:(_kind(i['id']),i['id']))
+        gaps.sort(key=lambda g:(g['id'],g['code']))
+        body=dict(schema=CONTEXT_SCHEMA,tenant_id=tenant,requested=requested,items=items,gaps=gaps)
+        # D8: the digest covers what was said and where it came from; nothing time-dependent is inside.
+        return dict(state='ok' if items else 'empty',context=dict(body,digest=digest(body)))
+
+    def _context_entry(self, row, grants, tenant, id):
+        """None (unknown), 'withheld', 'uncited' or the projected context fields of one entity."""
+        if not row or row['state']=='deleted' or (row['body'] or {}).get('schema') != 'orkmind.company-brain-entity/v1':
+            return None
+        grant=grants.get(row['acl_ref'])
+        if not grant or not allows(self.principal,grant,'get',tenant,id,row['source_instance']): return None
+        if row['state']=='withheld': return 'withheld'
+        body=project_fields(row['body'] or {},[grant])
+        entity={k:body[k] for k in CONTEXT_FIELDS if k in body}
+        return entity if _cited(entity.get('source')) else 'uncited'
 
     def get(self, tenant, id):
         if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != tenant:
