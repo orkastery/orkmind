@@ -13,7 +13,7 @@ from orkmind.store.company_brain import BrainStore
 from psycopg.rows import dict_row
 
 API='orkmind.company-brain-api/v1'
-OPERATIONS={'capabilities','ingest','get','query','receipts','head'}
+OPERATIONS={'capabilities','ingest','get','query','receipts','head','history'}
 
 
 def request(value,store=None):
@@ -23,7 +23,8 @@ def request(value,store=None):
     if operation=='capabilities':
         contract=Path(__file__).resolve().parents[1]/'contracts/company-brain.v1.json'
         return dict(schema=API,state='ok',contract_hash=hashlib.sha256(contract.read_bytes()).hexdigest(),operations=sorted(OPERATIONS),
-            authority='ork',capture='deterministic',principal_source='authenticated-transport',human_context_required=['get','query'])
+            authority='ork',capture='deterministic',principal_source='authenticated-transport',human_context_required=['get','query','history'],
+            selection_modes=['selection','context'])
     if store is None: return dict(schema=API,state='unavailable',error='brain.transport.unavailable')
     try:
         if operation in ('get','receipts','head'):
@@ -33,6 +34,15 @@ def request(value,store=None):
             result=(store.get(payload['tenant_id'],payload[key]) if operation=='get' else
                     store.receipts(payload['tenant_id'],payload[key]) if operation=='receipts' else
                     store.head(payload['tenant_id'],payload[key]))
+        elif operation=='history':
+            # Closed payload: tenant_id and id, plus an optional bounded page.
+            if (not isinstance(payload,dict) or not {'tenant_id','id'}<=set(payload) or set(payload)-{'tenant_id','id','limit','offset'}
+                or any(not isinstance(payload[k],str) or not payload[k] or len(payload[k])>160 for k in ('tenant_id','id'))):
+                raise ValueError('brain.api.invalid')
+            limit,offset=payload.get('limit',100),payload.get('offset',0)
+            if type(limit) is not int or type(offset) is not int or not 1<=limit<=1000 or not 0<=offset<=100000:
+                raise ValueError('brain.api.invalid')
+            result=store.history(payload['tenant_id'],payload['id'],limit,offset)
         elif operation=='query': result=store.query(validate(payload))
         else:
             event=validate(payload)
@@ -43,7 +53,7 @@ def request(value,store=None):
     except PermissionError: return dict(schema=API,state='forbidden',error='brain.access.forbidden')
     except ValueError as error:
         code=str(error)
-        allowed={'brain.api.invalid','brain.contract.invalid','brain.event.conflict','brain.event.sequence-gap','brain.authority.conflict','brain.version.conflict','brain.catalog.parent-missing','brain.catalog.dependency-invalid','brain.receipt.missing'}
+        allowed={'brain.api.invalid','brain.contract.invalid','brain.event.conflict','brain.event.sequence-gap','brain.authority.conflict','brain.version.conflict','brain.catalog.parent-missing','brain.catalog.dependency-invalid','brain.receipt.missing','brain.context.invalid'}
         return dict(schema=API,state='conflict',error=code if code in allowed else 'brain.api.invalid')
     except Exception:
         return dict(schema=API,state='unavailable',error='brain.store.unavailable')

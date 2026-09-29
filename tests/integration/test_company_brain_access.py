@@ -66,7 +66,8 @@ def test_query_facets_or_within_and_across_pagination_and_tenants(connection):
     q['tenant_id']='other';assert store.query(q)['state']=='forbidden'
     assert BrainStore(connection,Principal('person','synthetic','service',True)).query(selection())['state']=='forbidden'
     assert BrainStore(connection,Principal('person','synthetic','human',False)).query(selection())['state']=='forbidden'
-    q=selection();q['mode']='context';assert store.query(q)['error']=='brain.selection.context-unsupported'
+    # B4.2: o modo context responde o pacote do servidor em vez de context-unsupported.
+    q=selection(ids=['proj-alpha']);q['mode']='context';assert store.query(q)['context']['requested']==['proj-alpha']
     connection.execute('UPDATE brain_grants SET revoked=true')
     assert store.query(selection())['items']==[]
 

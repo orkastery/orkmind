@@ -1,6 +1,7 @@
 """D8/D9: PostgreSQL exact projection, transactional inbox/history/receipts/outbox."""
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from importlib import resources
 
@@ -9,6 +10,26 @@ from psycopg.types.json import Jsonb
 
 from orkmind.core.company_brain import digest, validate
 from orkmind.core.company_brain_access import Principal, allows, project_fields
+
+# B4.2/D2: the context package carries the citable state of an entity; description, criteria and aliases stay behind get.
+CONTEXT_SCHEMA = 'orkmind.company-brain-context/v1'
+CONTEXT_FIELDS = ('kind','version','title','status','parent_id','depends_on','owner','source','observed_at','recorded_at')
+# D7: closed gap codes. The last three describe a cited item; the first three replace content.
+CONTEXT_GAPS = ('entity.unknown','entity.withheld','citation.incomplete','owner.unresolved','observed.unknown','recorded.unknown')
+CITATION = ('authority','instance','source_ref','source_hash','source_version','location')
+KIND_ORDER = {'prod':0,'proj':1,'init':2}
+
+
+def _kind(id):
+    return KIND_ORDER.get(id.split('-',1)[0])
+
+
+def _cited(source):
+    """A citation counts only whole; a projected-away or partial source is never content.
+    Same test as the factory core applies, so both assembly paths drop the same items."""
+    if not isinstance(source,dict) or any(not isinstance(source.get(k),str) or not source.get(k) for k in CITATION if k!='source_version'):
+        return False
+    return re.fullmatch(r'[a-f0-9]{64}',source['source_hash']) is not None and type(source.get('source_version')) is int
 
 
 class BrainStore:
@@ -58,8 +79,8 @@ class BrainStore:
             raise ValueError('brain.contract.invalid')
         if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != selection['tenant_id']:
             return dict(state='forbidden',items=[])
-        if selection['mode'] != 'selection':
-            return dict(state='unavailable',error='brain.selection.context-unsupported',items=[])
+        if selection['mode'] == 'context':
+            return self.context(selection)
         facets=selection['facets']
         required={field for facet,field in [('ids','id'),('kinds','kind'),('workspace_ids','workspace_ids'),('source_instances','source')]
                   if facets[facet]}
@@ -97,6 +118,61 @@ class BrainStore:
         start=selection['offset']; items=found[start:start+selection['limit']]
         return dict(state='ok' if items else 'empty',items=items,count=len(found))
 
+    def context(self, selection):
+        """B4.2: citable context package for requested ids plus visible parents (D2-D8).
+
+        Each id resolves with get semantics (D3): absent, deleted and ungranted are the same
+        entity.unknown; withheld keeps only the id. Parents come only from cited items, through the
+        projected parent_id and a strictly higher kind (D4). One read-only snapshot (D6)."""
+        facets=selection['facets'];ids=facets['ids']
+        if (not ids or facets['kinds'] or facets['workspace_ids'] or facets['source_instances'] or selection['offset'] != 0
+            or len(ids) > selection['limit'] or any(_kind(i) is None for i in ids)):
+            raise ValueError('brain.context.invalid')
+        tenant=selection['tenant_id'];requested=sorted(set(ids));resolved={}
+        with self.connection.transaction():
+            self.connection.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+            self.fault('context-snapshot')
+            grants={g['acl_ref']:g for g in self.connection.execute('SELECT * FROM brain_grants WHERE tenant_id=%s AND principal_id=%s',
+                                                                    (tenant,self.principal.id)).fetchall()}
+            pending=requested
+            while pending:
+                rows={r['id']:r for r in self.connection.execute('SELECT * FROM brain_projection WHERE tenant_id=%s AND id = ANY(%s)',
+                                                                 (tenant,pending)).fetchall()}
+                parents=set()
+                for id in pending:
+                    entry=resolved[id]=self._context_entry(rows.get(id),grants,tenant,id)
+                    parent=entry.get('parent_id') if isinstance(entry,dict) else None
+                    if isinstance(parent,str) and _kind(parent) is not None and _kind(parent) < _kind(id): parents.add(parent)
+                pending=sorted(parents-set(resolved))
+        items,gaps=[],[]
+        for id,entry in resolved.items():
+            if entry is None: gaps.append(dict(id=id,code='entity.unknown'))
+            elif entry=='withheld': items.append(dict(id=id,state='withheld'));gaps.append(dict(id=id,code='entity.withheld'))
+            elif entry=='uncited': gaps.append(dict(id=id,code='citation.incomplete'))
+            else:
+                items.append(dict(id=id,state='ok',entity=entry))
+                owner=entry.get('owner')
+                if not isinstance(owner,dict) or owner.get('principal') is None: gaps.append(dict(id=id,code='owner.unresolved'))
+                if entry.get('observed_at') is None: gaps.append(dict(id=id,code='observed.unknown'))
+                if entry.get('recorded_at') is None: gaps.append(dict(id=id,code='recorded.unknown'))
+        # Code point order on ASCII identifiers: the same order the factory core computes.
+        items.sort(key=lambda i:(_kind(i['id']),i['id']))
+        gaps.sort(key=lambda g:(g['id'],g['code']))
+        body=dict(schema=CONTEXT_SCHEMA,tenant_id=tenant,requested=requested,items=items,gaps=gaps)
+        # D8: the digest covers what was said and where it came from; nothing time-dependent is inside.
+        return dict(state='ok' if items else 'empty',context=dict(body,digest=digest(body)))
+
+    def _context_entry(self, row, grants, tenant, id):
+        """None (unknown), 'withheld', 'uncited' or the projected context fields of one entity."""
+        if not row or row['state']=='deleted' or (row['body'] or {}).get('schema') != 'orkmind.company-brain-entity/v1':
+            return None
+        grant=grants.get(row['acl_ref'])
+        if not grant or not allows(self.principal,grant,'get',tenant,id,row['source_instance']): return None
+        if row['state']=='withheld': return 'withheld'
+        body=project_fields(row['body'] or {},[grant])
+        entity={k:body[k] for k in CONTEXT_FIELDS if k in body}
+        return entity if _cited(entity.get('source')) else 'uncited'
+
     def get(self, tenant, id):
         if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != tenant:
             return dict(state='forbidden')
@@ -107,6 +183,42 @@ class BrainStore:
         except PermissionError: return dict(state='unknown')
         if row['state']=='withheld': return dict(state='withheld')
         return dict(state='ok',entity=project_fields(row['body'],[grant]))
+
+    def history(self, tenant, id, limit=100, offset=0):
+        """B4.2/D9-D10: append-only versions of one entity, in sequence order, each with its origin.
+
+        Needs its own history action (default deny): without it the answer equals an absent entity.
+        A deleted entity keeps its trail, the tombstone being its last version; withheld hides it all.
+        Without the source field no version is citable, so the whole reading is refused. Origin metadata
+        (event, producer, cycle, recorded_at) always comes; body fields, version included, follow the grant."""
+        if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != tenant:
+            return dict(state='forbidden')
+        with self.connection.transaction():
+            self.connection.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+            self.fault('history-snapshot')
+            row=self.connection.execute('SELECT * FROM brain_projection WHERE tenant_id=%s AND id=%s',(tenant,id)).fetchone()
+            if not row: return dict(state='unknown')
+            try: grant=self._authorize(dict(tenant_id=tenant,aggregate_id=id,acl_ref=row['acl_ref'],source=dict(instance=row['source_instance'])),'history')
+            except PermissionError: return dict(state='unknown')
+            if row['state']=='withheld': return dict(state='withheld')
+            if 'source' not in grant['fields']: return dict(state='forbidden',error='brain.history.fields-forbidden')
+            count=self.connection.execute('SELECT count(*) AS n FROM brain_history WHERE tenant_id=%s AND aggregate_id=%s',(tenant,id)).fetchone()['n']
+            rows=self.connection.execute("""SELECT i.sequence, i.event, h.after_image, h.recorded_at,
+                (r.body->>'materialized_version')::bigint AS version, b.event_id IS NOT NULL AS rolled_back
+              FROM brain_history h JOIN brain_inbox i ON i.tenant_id=h.tenant_id AND i.event_id=h.event_id
+              LEFT JOIN brain_receipts r ON r.tenant_id=h.tenant_id AND r.event_id=h.event_id AND r.stage='materialized'
+              LEFT JOIN brain_rolled_back_events b ON b.tenant_id=h.tenant_id AND b.event_id=h.event_id
+              WHERE h.tenant_id=%s AND h.aggregate_id=%s ORDER BY i.sequence, i.event_id LIMIT %s OFFSET %s""",
+                (tenant,id,limit,offset)).fetchall()
+        versions=[]
+        for r in rows:
+            event=r['event'];cycle=event.get('cycle') or {}
+            versions.append(dict(sequence=r['sequence'],event_id=event['id'],operation=event['operation'],
+                version=r['version'] if 'version' in grant['fields'] else None,
+                source=event['source'],producer_id=event['producer_id'],thread_id=cycle.get('thread_id'),phase=cycle.get('phase'),
+                recorded_at=r['recorded_at'].astimezone(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00','Z'),
+                rolled_back=r['rolled_back'],entity=project_fields(r['after_image'],[grant]) if r['after_image'] else None))
+        return dict(state='ok',id=id,active=row['state']=='active',count=count,versions=versions)
 
     def head(self, tenant, id):
         """Minimal authenticated producer head used to join migration and capture."""
