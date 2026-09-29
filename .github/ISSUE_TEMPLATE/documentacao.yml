@@ -1,0 +1,34 @@
+name: Documentação
+description: Uma página errada, desatualizada, confusa ou que falta
+labels: ["documentation", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Contributions in English are welcome.
+
+        Correção pequena? Um PR direto também serve. Onde cada doc mora e como conferir:
+        [guia de documentação](https://github.com/orkastery/orkmind/blob/main/docs/contribuir/documentacao.md).
+
+  - type: input
+    id: pagina
+    attributes:
+      label: Qual página
+      placeholder: "docs/ontologia.md, ou o link"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: O que está errado ou confuso
+      description: Cite o trecho. Se a página diverge do código, diga o comando que mostra a divergência.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sugestao
+    attributes:
+      label: Como deveria ficar
+    validations:
+      required: false

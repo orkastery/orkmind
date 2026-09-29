@@ -58,7 +58,7 @@ orkmind store info
 ```
 
 - `--help` é a fonte de verdade dos comandos; cada comando tem o seu, como `orkmind store --help`.
-- `orkmind store info` mostra o backend configurado e as capacidades que ele declara. Roda sem o banco no ar, e é o que o modelo de issue de bug pede.
+- `orkmind store info` mostra o backend configurado e as capacidades que ele declara. Roda sem o banco no ar, e é o que o [modelo de bug](../../.github/ISSUE_TEMPLATE/bug_report.yml) pede.
 
 ## PostgreSQL com pgvector
 

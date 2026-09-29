@@ -1,0 +1,64 @@
+name: Ideia ou pedido de funcionalidade
+description: Um problema real que o OrkMind ainda não resolve
+labels: ["enhancement", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Contributions in English are welcome.
+
+        Feature nova começa por uma conversa no
+        [Discussions, categoria Ideas](https://github.com/orkastery/orkmind/discussions/categories/ideas),
+        e sempre que mexe em contrato: coleção, dimensão de tag, governança, backend ou dependência.
+        Use este formulário quando a conversa já apontou o caminho.
+
+        Comece pelo problema, não pela solução. Antes, procure nas issues abertas e no Discussions:
+        se o item já existe, comente nele o seu caso.
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: O problema
+      description: O que você tentou fazer, o que aconteceu e quanto isso custa hoje (tempo, retrabalho, risco).
+    validations:
+      required: true
+
+  - type: textarea
+    id: hoje
+    attributes:
+      label: Como você contorna hoje
+      description: O que você faz no lugar, com os comandos, se houver.
+    validations:
+      required: false
+
+  - type: textarea
+    id: pronto
+    attributes:
+      label: Como saberíamos que ficou pronto
+      description: Um critério que um comando ou um teste consiga provar. Critério sem prova é prosa.
+    validations:
+      required: true
+
+  - type: input
+    id: discussao
+    attributes:
+      label: Link da discussão
+      placeholder: "https://github.com/orkastery/orkmind/discussions/..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde isso aparece
+      options:
+        - biblioteca Python
+        - CLI orkmind
+        - servidor MCP
+        - API local
+        - Memory Provider
+        - plugin do Hermes
+        - plugin do OpenClaw
+        - não sei
+    validations:
+      required: false

@@ -4,12 +4,12 @@
 
 ## Título
 
-- Curto, dizendo o resultado para quem usa: "A busca por tag deixa de ignorar a dimensão `situation`".
+- Curto, dizendo o resultado para quem usa, como "`orkmind store info` ganha a saída em JSON".
 - Em pt-BR ou em inglês.
 
 ## Descrição
 
-O modelo de PR do repositório já abre com as seções. Seção em branco faz o PR voltar.
+O [modelo de PR](../../.github/PULL_REQUEST_TEMPLATE.md) já abre com as seções. Seção em branco faz o PR voltar.
 
 | Seção | O que traz |
 | --- | --- |
