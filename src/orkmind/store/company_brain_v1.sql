@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS brain_grants (
 );
 CREATE INDEX IF NOT EXISTS brain_projection_source ON brain_projection(tenant_id,source_instance);
 CREATE INDEX IF NOT EXISTS brain_receipts_event ON brain_receipts(tenant_id,event_id);
+CREATE INDEX IF NOT EXISTS brain_history_aggregate ON brain_history(tenant_id,aggregate_id);
 CREATE TABLE IF NOT EXISTS brain_migration_batches (
  tenant_id text NOT NULL, batch_id text NOT NULL, plan_hash text NOT NULL,
  state text NOT NULL, changes jsonb NOT NULL, receipt jsonb NOT NULL,

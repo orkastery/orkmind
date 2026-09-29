@@ -186,6 +186,23 @@ python examples/memory_provider.py
 
 See [docs/memory-provider/README.md](docs/memory-provider/README.md).
 
+## Company Brain
+
+The Company Brain is an exact, governed projection of what a software factory knows about its
+portfolio (products, projects and initiatives), with deterministic capture, per-item provenance,
+receipts per stage and an append-only history. Its contract, `orkmind.company-brain/v1`, is the
+same file in OrkMind and in Orkastery, and identity comes only from the authenticated database
+login, never from a request field. `orkmind brain request` (and the `orkmind_brain` MCP tool)
+answers `get`, `query`, `history` and the citable context package: the selection's `context`
+mode returns the requested entities and their visible parents with the whole citation, in one
+read-only snapshot, and turns anything uncited into a typed gap.
+
+```bash
+echo '{"schema":"orkmind.company-brain-api/v1","operation":"capabilities"}' | orkmind brain request
+```
+
+See [docs/company-brain.md](docs/company-brain.md).
+
 ## Development
 
 ```bash
@@ -219,6 +236,7 @@ indexed in [CONTRIBUTING](CONTRIBUTING.md). The guides are in Brazilian Portugue
 - [Federated memory](docs/federation.md): per-project stores, shared recall and profile ACL
 - [Guaranteed writes](docs/sempre-gravar.md): spool, drainer, idempotent API
 - [Native Memory Provider](docs/memory-provider/README.md)
+- [Company Brain v1](docs/company-brain.md): contract, identity, grants, context mode and history
 - [Benchmark](bench/README.md): method, metrics, and what it does not prove
 - [Changelog](CHANGELOG.md)
 

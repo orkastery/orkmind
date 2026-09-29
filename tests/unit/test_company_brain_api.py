@@ -72,3 +72,38 @@ def test_transport_principal_is_database_authenticated_not_an_argument():
             return Row()
     principal=transport_principal(Connection(),'synthetic')
     assert (principal.id,principal.kind,principal.authenticated)==('person','human',True)
+
+
+def test_api_s5_capabilities_declare_history_and_context_mode():
+    result=request(dict(schema=API,operation='capabilities'))
+    assert 'history' in result['operations'] and result['human_context_required']==['get','query','history']
+    assert result['selection_modes']==['selection','context']
+
+
+def test_api_s5_history_payload_is_closed_and_bounded():
+    calls=[]
+    class Store:
+        def history(self,tenant,id,limit,offset):
+            calls.append((tenant,id,limit,offset))
+            return dict(state='ok',id=id,active=True,count=0,versions=[])
+    ok=dict(tenant_id='synthetic',id='prod-example')
+    assert request(dict(schema=API,operation='history',payload=ok),Store())['state']=='ok'
+    assert request(dict(schema=API,operation='history',payload=dict(ok,limit=1000,offset=100000)),Store())['state']=='ok'
+    assert calls==[('synthetic','prod-example',100,0),('synthetic','prod-example',1000,100000)]
+    for bad in [None,dict(tenant_id='synthetic'),dict(ok,principal='owner'),dict(ok,limit=0),dict(ok,limit=1001),dict(ok,limit=True),
+                dict(ok,offset=-1),dict(ok,offset=100001),dict(ok,limit='10'),dict(ok,id=''),dict(ok,id='x'*161),dict(ok,tenant_id=7)]:
+        assert request(dict(schema=API,operation='history',payload=bad),Store())==dict(schema=API,state='conflict',error='brain.api.invalid')
+    assert len(calls)==2
+
+
+def test_api_s5_history_and_context_errors_are_codes_only():
+    class Broken:
+        def history(self,*args): raise RuntimeError('SENTINEL-secret')
+        def query(self,selection): raise ValueError('SENTINEL-secret' if selection['limit']==2 else 'brain.context.invalid')
+    history=request(dict(schema=API,operation='history',payload=dict(tenant_id='synthetic',id='prod-example')),Broken())
+    assert history==dict(schema=API,state='unavailable',error='brain.store.unavailable')
+    selection=dict(schema='orkmind.company-brain-selection/v1',tenant_id='synthetic',mode='context',limit=1,offset=0,
+                   facets=dict(ids=['prod-example'],kinds=[],workspace_ids=[],source_instances=[]))
+    assert request(dict(schema=API,operation='query',payload=selection),Broken())==dict(schema=API,state='conflict',error='brain.context.invalid')
+    leaked=request(dict(schema=API,operation='query',payload=dict(selection,limit=2)),Broken())
+    assert leaked==dict(schema=API,state='conflict',error='brain.api.invalid') and 'SENTINEL' not in str(leaked)

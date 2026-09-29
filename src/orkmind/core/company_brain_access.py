@@ -29,7 +29,7 @@ def allows(principal, grant, action, tenant, resource, source_instance, now=None
             return False
     if action not in grant.get('actions',[]) or resource not in grant.get('resources',[]) or source_instance not in grant.get('source_instances',[]):
         return False
-    if action in ('get','query') and principal.kind != 'human':
+    if action in ('get','query','history') and principal.kind != 'human':
         return False
     if action in ('ingest','migrate','rollback') and principal.kind != 'service':
         return False
