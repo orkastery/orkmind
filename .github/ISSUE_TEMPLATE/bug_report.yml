@@ -1,0 +1,83 @@
+name: Bug
+description: Alguma coisa não faz o que a documentação diz que faz
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Contributions in English are welcome.
+
+        Bug de documentação vale tanto quanto bug de código. Se o README diz que algo
+        funciona e na sua máquina não funciona, isso é um defeito do projeto, e não um
+        mal-entendido seu.
+
+        Para vulnerabilidade de segurança, **não** use este formulário. Veja o SECURITY.md.
+
+        Quando abrir issue, discussão ou PR: [o que contribuir](https://github.com/orkastery/orkmind/blob/main/docs/contribuir/o-que-contribuir.md).
+
+  - type: textarea
+    id: comando
+    attributes:
+      label: O comando exato que você rodou
+      description: Ou o trecho de código, com o que ele recebe.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: saida
+    attributes:
+      label: A saída real
+      description: Cole a saída, não a descrição dela. Tire senha e token da DSN antes de colar.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que você esperava
+      description: E, se possível, onde a documentação diz isso.
+    validations:
+      required: true
+
+  - type: textarea
+    id: backend
+    attributes:
+      label: Saída de `orkmind store info`
+      description: O backend configurado e o que ele declara saber fazer. Se o comando sair com erro, cole o erro.
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: versao
+    attributes:
+      label: Versão do OrkMind
+      placeholder: "a saída de: orkmind --version (ou o sha do commit)"
+    validations:
+      required: true
+
+  - type: input
+    id: ambiente
+    attributes:
+      label: Python e sistema
+      placeholder: "a saída de: python --version, e o sistema operacional"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde isso aparece
+      options:
+        - biblioteca Python
+        - CLI orkmind
+        - servidor MCP
+        - API local
+        - Memory Provider
+        - plugin do Hermes
+        - plugin do OpenClaw
+        - não sei
+    validations:
+      required: false

@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilidade de segurança
+    url: https://github.com/orkastery/orkmind/security/advisories/new
+    about: Não abra issue pública. Use o canal privado; veja SECURITY.md.
+  - name: Ideia ainda aberta
+    url: https://github.com/orkastery/orkmind/discussions/categories/ideas
+    about: Feature nova ou mudança de contrato começa por uma conversa.
+  - name: Dúvida de uso
+    url: https://github.com/orkastery/orkmind/discussions/categories/q-a
+    about: A resposta fica achável para quem vier depois.
+  - name: Como contribuir
+    url: https://github.com/orkastery/orkmind/blob/main/CONTRIBUTING.md
+    about: Um guia por tarefa, do clone ao PR verde.

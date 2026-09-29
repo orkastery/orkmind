@@ -181,6 +181,9 @@ pytest                           # a suíte inteira; precisa de ORKMIND_TEST_DAT
 Os testes de integração apagam o banco para onde apontam, então a guarda dos testes só aceita um
 banco cujo nome o marque como banco de teste.
 
+Ambiente, testes e o que precisa de banco, estilo, pull request e publicação têm um guia cada, com
+o índice no [CONTRIBUTING](CONTRIBUTING.md).
+
 ## Documentação
 
 - [Referência da ontologia](docs/ontologia.md): coleções, dimensões de tag, validação

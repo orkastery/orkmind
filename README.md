@@ -214,6 +214,9 @@ pytest                           # the full suite; needs ORKMIND_TEST_DATABASE_U
 The integration tests erase the database they point at, so the test guard only accepts a
 database whose name marks it as a test database.
 
+Setup, tests and what needs a database, style, pull requests and releases have one guide each,
+indexed in [CONTRIBUTING](CONTRIBUTING.md). The guides are in Brazilian Portuguese today.
+
 ## Design decisions
 
 | Decision | Rationale |
