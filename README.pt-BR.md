@@ -8,7 +8,7 @@
 > importam sempre chegam ao modelo, a recuperação é determinística e o histórico nunca é
 > reescrito.
 
-- **Status:** 0.3.0, alfa · no PyPI como [`orkmind`](https://pypi.org/project/orkmind/) ·
+- **Status:** 0.4.0, alfa · no PyPI como [`orkmind`](https://pypi.org/project/orkmind/) ·
   [mudanças por versão](CHANGELOG.md)
 - **Prova:** o CI de todo pull request roda a suíte sem banco em Python 3.11 e 3.12, confere o
   sdist e o wheel e testa o plugin do OpenClaw.

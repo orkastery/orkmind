@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "orkmind"
-version = "0.3.0"
+version = "0.4.0"
 description = "Semantic memory layer for AI agents -- typed ontology, deterministic tag search, and mandatory rule injection."
 readme = "README.md"
 license = "MIT"
