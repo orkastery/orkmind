@@ -35,9 +35,10 @@
 
 ## Comandos nos guias
 
-- Todo bloco `bash` destes guias roda, da raiz, na checagem completa, e precisa sair 0. Cada linha roda num `bash -c` próprio: `cd`, `export` e `source` não passam para a linha seguinte.
-- Os blocos rodam com o Python que roda a checagem na frente do `PATH`, e sem nenhuma variável `ORKMIND_*`: o que roda ali roda sem banco.
-- Comando que usa rede, Docker ou banco, tem efeito fora da máquina, ou sai diferente de zero por dívida anterior que o texto declara, vai num bloco precedido da linha `<!-- checagem: citado -->`. Ele não roda.
+- Todo bloco `bash` destes guias roda, da raiz, na checagem completa, e precisa sair 0. Cada linha roda num `bash -o pipefail -c` próprio: `cd`, `export` e `source` não passam para a linha seguinte.
+- Os blocos rodam como na máquina de quem acabou de clonar: com o Python que roda a checagem na frente do `PATH`, stdin fechado, `HOME` num diretório vazio e sem nenhuma variável `ORKMIND_*`. Sem `~/.orkmind/config.toml` e sem DSN, o que roda ali roda sem banco.
+- Comando que usa rede, Docker, banco ou backend configurado, tem efeito fora da máquina, ou sai diferente de zero por dívida anterior que o texto declara, vai num bloco precedido da linha `<!-- checagem: citado -->`. Ele não roda.
+- Bloco sem língua reprova: marque `bash`, `text` ou a língua do trecho.
 - Em todo PR, o teste [test_guias_de_contribuicao.py](../../tests/unit/test_guias_de_contribuicao.py) confere que o que os guias citam existe: comando do `orkmind`, marca do pytest, extra, variável, caminho, link e âncora, rótulo dos modelos e os checks do guia de PR.
 - A checagem completa roda os blocos com o resto do seu ambiente: rode só sobre guias que você leu.
 

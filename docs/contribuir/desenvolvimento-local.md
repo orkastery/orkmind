@@ -9,13 +9,6 @@
 - Para os testes de integração, e só para eles: PostgreSQL com a extensão pgvector. O jeito mais curto é o Docker, pelo [setup_postgres.sh](../../scripts/setup_postgres.sh).
 - Para o plugin do OpenClaw, e só para ele: Node.js na versão de [ci.yml](../../.github/workflows/ci.yml).
 
-Confira a faixa pedida e a sua versão:
-
-```bash
-python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['requires-python'])"
-python --version
-```
-
 ## Clonar e instalar
 
 <!-- checagem: citado -->
@@ -23,6 +16,20 @@ python --version
 ```bash
 git clone https://github.com/orkastery/orkmind.git
 cd orkmind
+```
+
+Antes de criar o venv, confira o Python contra a faixa pedida:
+
+```bash
+python --version
+python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['requires-python'])"
+```
+
+Se o segundo comando falhar no `import tomllib`, o seu Python é mais antigo que o mínimo: troque de Python antes de seguir.
+
+<!-- checagem: citado -->
+
+```bash
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e ".[dev,memory-provider,documents,qdrant,encryption]"
@@ -54,11 +61,23 @@ python -c "import tomllib; print(', '.join(tomllib.load(open('pyproject.toml', '
 ```bash
 orkmind --version
 orkmind --help
+```
+
+`--help` é a fonte de verdade dos comandos; cada comando tem o seu, como `orkmind store --help`.
+
+Os comandos que abrem o store leem o backend de `ORKMIND_DATABASE_URL` ou do `~/.orkmind/config.toml`. Sem nenhum dos dois, eles saem 1 dizendo o que falta. `orkmind store info`, que o [modelo de bug](../../.github/ISSUE_TEMPLATE/bug_report.yml) pede, mostra o backend configurado e as capacidades que ele declara:
+
+<!-- checagem: citado -->
+
+```bash
 orkmind store info
 ```
 
-- `--help` é a fonte de verdade dos comandos; cada comando tem o seu, como `orkmind store --help`.
-- `orkmind store info` mostra o backend configurado e as capacidades que ele declara. Roda sem o banco no ar, e é o que o [modelo de bug](../../.github/ISSUE_TEMPLATE/bug_report.yml) pede.
+Para ver o CLI funcionando sem configurar nada, o backend `memory`, que não guarda nada depois do processo:
+
+```bash
+ORKMIND_STORE_BACKEND=memory orkmind store info
+```
 
 ## PostgreSQL com pgvector
 

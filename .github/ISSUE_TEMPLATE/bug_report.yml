@@ -45,10 +45,10 @@ body:
     id: backend
     attributes:
       label: Saída de `orkmind store info`
-      description: O backend ativo e o que ele declara saber fazer. Roda sem o banco no ar.
+      description: O backend configurado e o que ele declara saber fazer. Se o comando sair com erro, cole o erro.
       render: shell
     validations:
-      required: true
+      required: false
 
   - type: input
     id: versao

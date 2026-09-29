@@ -9,8 +9,10 @@ suite): e o que faz o job `testes` de todo PR segurar a paridade dos guias. Fora
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 import textwrap
+import time
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -286,6 +288,74 @@ def test_blocos_rodam_sem_as_variaveis_do_orkmind(
     ```
     """
     assert _checar(_arvore(tmp_path, guia)).falhas == []
+
+
+def test_blocos_rodam_com_home_vazio(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    home = tmp_path / "home-de-quem-chama"
+    (home / ".orkmind").mkdir(parents=True)
+    (home / ".orkmind" / "config.toml").write_text('[store]\nbackend = "pgvector"\n')
+    monkeypatch.setenv("HOME", str(home))
+    guia = """
+    # Guia
+
+    ```bash
+    test -z "$(ls -A "$HOME")"
+    ```
+    """
+    assert _checar(_arvore(tmp_path / "repo", guia)).falhas == []
+
+
+def test_python_da_checagem_vem_primeiro_no_path(tmp_path: Path) -> None:
+    esperado = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "python")
+    guia = f"""
+    # Guia
+
+    ```bash
+    test "$(command -v python)" = "{esperado}"
+    ```
+    """
+    assert _checar(_arvore(tmp_path, guia)).falhas == []
+
+
+def test_pipe_que_falha_a_esquerda_reprova(tmp_path: Path) -> None:
+    guia = """
+    # Guia
+
+    ```bash
+    false | cat
+    ```
+    """
+    falhas = _checar(_arvore(tmp_path, guia)).falhas
+    assert len(falhas) == 1 and '"false | cat" saiu 1' in falhas[0]
+
+
+def test_bloco_nao_espera_stdin_e_o_prazo_mata_o_bloco(tmp_path: Path) -> None:
+    guia = """
+    # Guia
+
+    ```bash
+    cat
+    sleep 30
+    ```
+    """
+    inicio = time.monotonic()
+    falhas = checar_guias.checar(_arvore(tmp_path, guia), prazo_total_s=3, cli=CLI).falhas
+    assert time.monotonic() - inicio < 15
+    assert len(falhas) == 1
+    assert '"sleep 30" saiu pelo prazo' in falhas[0]
+
+
+def test_bloco_sem_lingua_reprova(tmp_path: Path) -> None:
+    guia = """
+    # Guia
+
+    ```
+    true
+    ```
+    """
+    falhas = _checar(_arvore(tmp_path, guia)).falhas
+    assert falhas == ["docs/contribuir/guia.md:3: bloco sem lingua: marque bash, text ou a "
+                      "lingua do trecho"]
 
 
 def test_ancora_segue_o_github() -> None:

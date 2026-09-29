@@ -1,6 +1,6 @@
 # Lint e estilo
 
-> **Em uma frase:** o ruff confere o Python com as regras do `pyproject.toml`; ele e o mypy ainda não são check do CI e a árvore tem dívida anterior, então rode o ruff nos arquivos que você mudou e não acrescente erro.
+> **Em uma frase:** o ruff confere o Python com as regras do `pyproject.toml`; rode-o nos arquivos que você mudou e não acrescente erro, porque a árvore tem dívida anterior e o CI não roda lint.
 
 ## O que confere o quê
 
@@ -21,9 +21,9 @@ git diff --name-only --diff-filter=d origin/main... -- '*.py' | xargs -r ruff ch
 - Num fork, troque `origin` pelo remoto do OrkMind, que costuma se chamar `upstream`.
 - `ruff check --fix <arquivo>` corrige o que é seguro, como a ordem dos imports.
 
-## A dívida de hoje
+## Dívida anterior e o CI
 
-`ruff check .`, `ruff format --check .` e `mypy` saem diferente de zero na `main` de hoje, por dívida anterior. Não é o seu PR que precisa zerar essa dívida; ele só não pode aumentá-la.
+Se `ruff check .`, `ruff format --check .` ou `mypy` saírem diferente de zero na `main`, é dívida anterior. Não é o seu PR que precisa zerar essa dívida; ele só não pode aumentá-la.
 
 - Não rode `ruff format` sobre a árvore: ele reformataria arquivos que você não tocou e esconderia a sua mudança no diff. Não há formatador adotado; siga o arquivo que você edita.
 - O mypy olha o pacote inteiro. Compare a saída com a da `main`, como em [falha anterior ou regressão](testes.md#falha-anterior-ou-regressão), e não acrescente erro nos arquivos que você mudou:
@@ -32,6 +32,12 @@ git diff --name-only --diff-filter=d origin/main... -- '*.py' | xargs -r ruff ch
 
 ```bash
 mypy
+```
+
+Nenhum job de [ci.yml](../../.github/workflows/ci.yml) roda ruff ou mypy. Este comando confere que continua assim, e reprova quando um job de lint entrar, para este guia mudar junto:
+
+```bash
+! grep -nE 'ruff|mypy' .github/workflows/ci.yml
 ```
 
 ## Estilo de código
@@ -57,7 +63,7 @@ python -c "import tomllib; print(', '.join(tomllib.load(open('pyproject.toml', '
 
 - As coleções e as dimensões de tag da [ontologia](../ontologia.md).
 - O que cada backend declara em `StoreCapabilities`: degradação nova é declarada, nunca silenciosa.
-- O histórico append-only: versões antigas em `memory_versions`.
+- O histórico que não se reescreve: versões antigas em `memory_versions`.
 - Mudar um contrato é PR próprio, com a justificativa separada e a conversa antes, como diz [o que contribuir](o-que-contribuir.md#pede-conversa-antes-sempre).
 
 ## Próximo passo

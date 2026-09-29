@@ -31,7 +31,7 @@ Um PR que descreve o problema em uma linha e cola a saída de um teste novo vale
 
 ## Checks obrigatórios
 
-A `main` é protegida: o merge só sai com os checks obrigatórios verdes no último commit do PR. São os jobs de [ci.yml](../../.github/workflows/ci.yml).
+A `main` é protegida pelos checks obrigatórios: o merge espera todos verdes no último commit do PR. São os jobs de [ci.yml](../../.github/workflows/ci.yml).
 
 | Check | O que roda |
 | --- | --- |
@@ -39,7 +39,7 @@ A `main` é protegida: o merge só sai com os checks obrigatórios verdes no úl
 | `pacote (sdist e wheel)` | Build, `twine check --strict`, o `conferir_pacote.py` e o wheel instalado num venv limpo |
 | `plugin OpenClaw (memory-orkmind)` | `npm ci`, os testes e o build do plugin |
 
-- Nenhum check roda ruff, mypy ou a suíte de integração: por isso a descrição traz essa prova quando ela vale.
+- Nenhum check roda ruff, mypy ([lint e estilo](lint-e-estilo.md#dívida-anterior-e-o-ci) confere) nem a suíte de integração (o job `testes` roda com `-m "not integration"`): por isso a descrição traz essa prova quando ela vale.
 - No primeiro PR vindo de fork, o GitHub pode esperar o mantenedor liberar os checks.
 
 ## Identidade

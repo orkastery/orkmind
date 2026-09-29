@@ -17,7 +17,7 @@
 
 - **As coleções e as dimensões de tag são contrato.** Mudar uma delas muda a [ontologia](../ontologia.md).
 - **A governança fica acima do backend.** Proteção, ACL, versionamento e ordem vivem no `GovernedStore`. Um backend novo não pode enfraquecê-los, e toda degradação é declarada em `StoreCapabilities`. Ver o [guia de backends](../storage-backends/GUIA-BACKENDS.md).
-- **O histórico não se reescreve.** Versões antigas ficam em `memory_versions`, e o Memory Provider recusa `UPDATE` e `DELETE` no histórico por trigger.
+- **O histórico não se reescreve.** Versões antigas ficam em `memory_versions`. No Memory Provider, o histórico de conversa e as revisões de documento recusam `UPDATE` e `DELETE` por trigger.
 - **Dependência nova de runtime** em `dependencies` do [pyproject.toml](../../pyproject.toml) é decisão de produto. O que é opcional vai para um extra, como `qdrant` e `memory-provider`.
 
 ## Antes de começar

@@ -5,12 +5,14 @@ Uso: python .github/scripts/checar_guias.py [raiz] [--so-existencia]
 Escopo: `CONTRIBUTING.md`, `docs/contribuir/*.md` e os modelos de issue e de PR em `.github/`.
 
 Falha (codigo 1), com arquivo e linha, quando:
-  - uma linha de bloco `bash` sai != 0. Cada linha roda da raiz num `bash -c` proprio, com o
-    `bin` do Python que roda esta checagem na frente do PATH e SEM as variaveis `ORKMIND_*`: o
-    bloco que roda aqui roda sem banco. Bloco precedido da linha `<!-- checagem: citado -->`
-    (rede, Docker, banco, efeito fora da maquina, ou saida != 0 por divida anterior que o texto
-    declara) nao roda;
+  - uma linha de bloco `bash` sai != 0. Cada linha roda da raiz num `bash -o pipefail -c`
+    proprio, com o `bin` do Python que roda esta checagem na frente do PATH, stdin fechado, HOME
+    num diretorio vazio e SEM as variaveis `ORKMIND_*`: sem `~/.orkmind/config.toml` e sem DSN, o
+    bloco que roda aqui roda sem banco, como na maquina de quem acabou de clonar. Bloco precedido
+    da linha `<!-- checagem: citado -->` (rede, Docker, banco ou backend configurado, efeito fora
+    da maquina, ou saida != 0 por divida anterior que o texto declara) nao roda;
   - um bloco `sh`, `shell`, `zsh` ou `console` nao tem a marca: ou roda como `bash`, ou e citado;
+    e bloco sem lingua reprova: marque `bash`, `text` ou a lingua do trecho;
   - um `orkmind <comando> [<sub>]` citado nao existe no CLI; uma marca de `pytest -m`, um extra
     `.[...]`, uma variavel `ORKMIND_*` ou um caminho do repositorio citados nao existem;
   - um link relativo nao existe, ou a ancora dele nao bate com um titulo do destino. Fora do
@@ -21,8 +23,9 @@ Falha (codigo 1), com arquivo e linha, quando:
   - um guia de `docs/contribuir/` nao esta no indice.
 
 `--so-existencia` confere tudo menos rodar os blocos: e o modo do teste da suite, porque rodar
-os blocos rodaria a propria suite. Os blocos rodam com o resto do seu ambiente: rode a checagem
-completa so sobre guias que voce leu, como faria com um script de instalacao.
+os blocos rodaria a propria suite. Fora o que esta acima, os blocos rodam com o resto do seu
+ambiente: rode a checagem completa com o Python do venv e so sobre guias que voce leu, como faria
+com um script de instalacao.
 """
 
 from __future__ import annotations
@@ -33,6 +36,7 @@ import re
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 import tomllib
 from collections.abc import Callable
@@ -46,8 +50,8 @@ GUIA_TRIAGEM = f"{DIR_GUIAS}/triagem.md"
 GUIA_PR = f"{DIR_GUIAS}/pull-request.md"
 WORKFLOW_CI = ".github/workflows/ci.yml"
 SHELL_SEM_BASH = {"sh", "shell", "zsh", "console"}
-# O `ork verify` corta cada comando de claim em 10 min: a checagem para antes, para o relatorio
-# sair em vez de ser morto no meio.
+# Abaixo dos 10 min que um passo de verificacao costuma ter: o relatorio sai, em vez de a
+# checagem ser morta no meio.
 PRAZO_TOTAL_S = 540
 # Uma variavel ORKMIND_* citada existe quando aparece no codigo, nos testes ou no CI.
 FONTES_DE_VARIAVEL = ("src", "tests", "scripts", "bench", "examples", "integrations",
@@ -304,9 +308,12 @@ def markdown_versionado(raiz: Path) -> list[str]:
     return [linha for linha in r.stdout.splitlines() if linha]
 
 
-def ambiente_dos_blocos() -> dict[str, str]:
-    """O ambiente de quem chama, sem `ORKMIND_*` e com o venv desta checagem na frente do PATH."""
+def ambiente_dos_blocos(home: str) -> dict[str, str]:
+    """O ambiente de quem chama, sem `ORKMIND_*`, com HOME em `home` (vazio) e com o venv desta
+    checagem na frente do PATH."""
     ambiente = {k: v for k, v in os.environ.items() if not k.startswith("ORKMIND_")}
+    # Sem o HOME de quem chama, o `~/.orkmind/config.toml` da maquina nao chega ao bloco.
+    ambiente["HOME"] = home
     # abspath, e nao resolve: o `python` de um venv e um link para o do sistema.
     bin_do_python = os.path.dirname(os.path.abspath(sys.executable))
     ambiente["PATH"] = bin_do_python + os.pathsep + ambiente.get("PATH", "")
@@ -315,21 +322,34 @@ def ambiente_dos_blocos() -> dict[str, str]:
     return ambiente
 
 
+def matar_grupo(proc: subprocess.Popen[str]) -> None:
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+
+
 def rodar(raiz: Path, comando: str, prazo_s: int, ambiente: dict[str, str]) -> Execucao:
     inicio = time.monotonic()
     # Sessao propria: no estouro do prazo o grupo inteiro morre, nao so o `bash`.
+    # pipefail: a falha do lado esquerdo de um pipe nao some no `xargs` do lado direito.
     proc = subprocess.Popen(
-        ["bash", "-c", comando], cwd=raiz, env=ambiente, stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace",
-        start_new_session=True,
+        ["bash", "-o", "pipefail", "-c", comando], cwd=raiz, env=ambiente,
+        stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+        encoding="utf-8", errors="replace", start_new_session=True,
     )
     try:
         saida, _ = proc.communicate(timeout=prazo_s)
         status = str(proc.returncode)
     except subprocess.TimeoutExpired:
-        os.killpg(proc.pid, signal.SIGKILL)
+        matar_grupo(proc)
         saida, _ = proc.communicate()
         status = f"pelo prazo ({prazo_s} s)"
+    except BaseException:
+        # Ctrl-C ou SIGTERM na checagem nao deixa o bloco orfao.
+        matar_grupo(proc)
+        proc.communicate()
+        raise
     linhas = ANSI.sub("", saida or "").strip().split("\n")
     # A cauda de uma suite so traz o resumo: os FAILED vao junto, para dizer QUAL teste caiu.
     reprovados = [linha for linha in linhas if linha.startswith(("FAILED", "ERROR"))][:10]
@@ -349,13 +369,24 @@ def checar(
     cli: dict[str, set[str] | None] | None = None,
 ) -> Resultado:
     """A checagem inteira. `executar=False` confere so a existencia."""
-    raiz = raiz.resolve()
+    with tempfile.TemporaryDirectory(prefix="checar-guias-home-") as home:
+        return _checar(raiz.resolve(), executar, prazo_total_s, ao_rodar, cli,
+                       ambiente_dos_blocos(home))
+
+
+def _checar(
+    raiz: Path,
+    executar: bool,
+    prazo_total_s: int,
+    ao_rodar: Callable[[str, int, str, Execucao], None] | None,
+    cli: dict[str, set[str] | None] | None,
+    ambiente: dict[str, str],
+) -> Resultado:
     falhas: list[str] = []
     a_rodar: list[tuple[str, int, str]] = []
     ja_rodados: set[str] = set()
     citados = 0
     inicio = time.monotonic()
-    ambiente = ambiente_dos_blocos()
 
     pyproject = raiz / "pyproject.toml"
     projeto = tomllib.loads(pyproject.read_text("utf-8")) if pyproject.is_file() else {}
@@ -395,11 +426,12 @@ def checar(
 
     def conferir(rel: str, numero: int, texto: str, em_bloco: bool = False) -> None:
         for topo, sub in citacoes_do_orkmind(texto):
+            subcomandos = cli.get(topo, set())
             if topo not in cli:
                 falhas.append(f'{rel}:{numero}: o CLI nao tem "orkmind {topo}"')
             elif (
-                cli[topo] is not None and re.fullmatch(r"[a-z][a-z-]*", sub)
-                and sub not in cli[topo]
+                subcomandos is not None and re.fullmatch(r"[a-z][a-z-]*", sub)
+                and sub not in subcomandos
             ):
                 falhas.append(f'{rel}:{numero}: o CLI nao tem "orkmind {topo} {sub}"')
         # Script `orkmind-*` so conta em bloco: em crase solta, `orkmind-postgres` e so um nome.
@@ -474,12 +506,16 @@ def checar(
         for numero, alvo in md.links:
             conferir_link(rel, numero, alvo, com_ancora=True)
         for bloco in md.blocos:
-            if bloco.lingua in SHELL_SEM_BASH and not bloco.citado:
+            lingua = bloco.lingua.lower()
+            if lingua in SHELL_SEM_BASH and not bloco.citado:
                 falhas.append(
-                    f"{rel}:{bloco.inicio}: bloco {bloco.lingua} sem a marca de citado: "
+                    f"{rel}:{bloco.inicio}: bloco {lingua} sem a marca de citado: "
                     "use bash para rodar, ou marque como citado"
                 )
-            roda = bloco.lingua == "bash" and not bloco.citado
+            if not lingua:
+                falhas.append(f"{rel}:{bloco.inicio}: bloco sem lingua: marque bash, text ou a "
+                              "lingua do trecho")
+            roda = lingua == "bash" and not bloco.citado
             for numero, comando in comandos_do_bloco(bloco):
                 conferir(rel, numero, comando, em_bloco=True)
                 if not roda:
@@ -531,9 +567,11 @@ def checar(
             do_modelo = rotulos_do_modelo(texto)
             if do_modelo == []:
                 falhas.append(f"{rel}: a chave labels existe, mas nenhum rotulo foi lido")
-            for r in do_modelo or []:
-                if r not in rotulos:
-                    falhas.append(f'{rel}: o rotulo "{r}" nao esta na tabela de {GUIA_TRIAGEM}')
+            for rotulo in do_modelo or []:
+                if rotulo not in rotulos:
+                    falhas.append(
+                        f'{rel}: o rotulo "{rotulo}" nao esta na tabela de {GUIA_TRIAGEM}'
+                    )
 
     guia_pr, ci = raiz / GUIA_PR, raiz / WORKFLOW_CI
     if guia_pr.is_file() and ci.is_file():
@@ -547,7 +585,13 @@ def checar(
     return Resultado(falhas, len(a_rodar), citados, a_rodar)
 
 
+def _encerrar(sinal: int, _quadro: object) -> None:
+    # SIGTERM vira SystemExit: o `rodar` mata o grupo do bloco antes de a checagem sair.
+    raise SystemExit(128 + sinal)
+
+
 def main(argv: list[str] | None = None) -> int:
+    signal.signal(signal.SIGTERM, _encerrar)
     parser = argparse.ArgumentParser(description="Confere os guias de contribuicao.")
     parser.add_argument("raiz", nargs="?", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--so-existencia", action="store_true",
