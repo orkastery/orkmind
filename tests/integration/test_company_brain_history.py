@@ -124,6 +124,8 @@ def test_history_s4_projection_page_count_and_read_only_snapshot(connection):
     assert seen == dict(read_only='on', isolation='repeatable read') and counts() == before
     assert page['count'] == 3 and [v['sequence'] for v in page['versions']] == [2]
     assert set(page['versions'][0]['entity']) == {'id', 'title', 'source'}
+    # A versão é campo do corpo: sem 'version' na concessão, ela não sai nem nos metadados.
+    assert page['versions'][0]['version'] is None and page['versions'][0]['event_id'] and page['versions'][0]['recorded_at']
     assert store.history('synthetic', 'prod-example', limit=10, offset=3)['versions'] == []
     envelope = dict(schema=API, operation='history', payload=dict(tenant_id='synthetic', id='prod-example', limit=2))
     result = request(envelope, store)

@@ -132,7 +132,8 @@ Regras:
   `parent_id`, `depends_on`, `owner`, `source`, `observed_at` e `recorded_at`. Descrição,
   critérios de aceite e aliases continuam no `get`.
 
-Resposta (`state` é `ok` com algum item e `empty` sem nenhum):
+Resposta (`state` é `ok` com algum item e `empty` sem nenhum). Aqui, `init-exemplo-dois` está
+retido, `init-exemplo-um` não existe para quem pergunta e `prod-exemplo` sai com a citação:
 
 ```json
 {
@@ -141,19 +142,28 @@ Resposta (`state` é `ok` com algum item e `empty` sem nenhum):
   "context": {
     "schema": "orkmind.company-brain-context/v1",
     "tenant_id": "exemplo",
-    "requested": ["init-exemplo-um", "init-exemplo-dois"],
+    "requested": ["init-exemplo-dois", "init-exemplo-um", "prod-exemplo"],
     "items": [
-      {"id": "prod-exemplo", "state": "ok", "entity": {"kind": "prod", "version": 1, "source": {"...": "..."}}},
+      {"id": "prod-exemplo", "state": "ok", "entity": {
+        "kind": "prod", "version": 1, "title": "Produto exemplo", "status": "delivered", "parent_id": null,
+        "depends_on": [], "owner": {"raw": "Equipe", "state": "legacy-label", "principal": null},
+        "source": {"authority": "ork", "instance": "fabrica", "source_ref": "portfolio.json#prod-exemplo",
+                   "source_hash": "<sha256 do item na fonte>", "source_version": 1, "location": "id:prod-exemplo"},
+        "observed_at": "2026-09-29T12:00:00Z", "recorded_at": "2026-09-29T12:00:01Z"}},
       {"id": "init-exemplo-dois", "state": "withheld"}
     ],
     "gaps": [
       {"id": "init-exemplo-dois", "code": "entity.withheld"},
-      {"id": "init-exemplo-um", "code": "entity.unknown"}
+      {"id": "init-exemplo-um", "code": "entity.unknown"},
+      {"id": "prod-exemplo", "code": "owner.unresolved"}
     ],
     "digest": "<sha256 do JSON canônico de schema, tenant_id, requested, items e gaps>"
   }
 }
 ```
+
+Um pacote completo, com fecho de pais e citação incompleta, está em
+`tests/fixtures/company-brain-context-v1.json`.
 
 Itens em ordem `prod`, `proj`, `init` e depois id; lacunas por id e código; tudo por code point. O
 `digest` não tem horário dentro: o mesmo estado do Brain dá o mesmo digest, e quem recebe o pacote
@@ -188,7 +198,7 @@ A resposta traz `id`, `active` (falso depois do tombstone), `count` (total de ve
 | Campo | Origem |
 | --- | --- |
 | `sequence`, `event_id`, `operation` | o evento no inbox (`upsert` ou `tombstone`) |
-| `version` | a versão materializada, do recibo `materialized` |
+| `version` | a versão materializada, do recibo `materialized`; `null` se a concessão não mostra `version` |
 | `source`, `producer_id` | a citação da fonte e o produtor do evento |
 | `thread_id`, `phase` | o ciclo da fábrica que produziu o evento, ou `null` |
 | `recorded_at` | o horário de gravação no Brain, em UTC |
@@ -198,8 +208,10 @@ A resposta traz `id`, `active` (falso depois do tombstone), `count` (total de ve
 Regras: exige a ação `history`, só de humano; sem ela a resposta é `unknown`, igual a uma entidade
 que não existe. Entidade retida responde `withheld`. Concessão sem o campo `source` responde
 `forbidden` com `brain.history.fields-forbidden`, porque versão sem origem não é citável. Entidade
-apagada continua legível: o tombstone é a última versão. A leitura roda no mesmo instantâneo
-somente leitura do modo `context`.
+apagada continua legível: o tombstone é a última versão. A leitura roda numa transação
+`REPEATABLE READ, READ ONLY`, como a do modo `context`. Os metadados de origem (evento, produtor,
+ciclo e `recorded_at`) saem sempre; os campos do corpo, `version` inclusive, seguem o `fields` da
+concessão.
 
 ## Escrita e migração
 

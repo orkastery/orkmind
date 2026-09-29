@@ -11,7 +11,7 @@ from orkmind.cli.company_brain import API, request
 from orkmind.core.company_brain import digest
 from orkmind.core.company_brain_access import Principal
 from orkmind.core.company_brain_migration import BrainMigration
-from orkmind.store.company_brain import CONTEXT_FIELDS, BrainStore
+from orkmind.store.company_brain import CONTEXT_FIELDS, CONTEXT_GAPS, BrainStore
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_company_brain_store import connection, EVENT, TransactionTestStore
@@ -110,6 +110,7 @@ def test_context_s2_citation_withheld_unknown_and_item_gaps(connection):
         assert set(item['entity']['source']) == {'authority', 'instance', 'source_ref', 'source_hash', 'source_version', 'location'}
     gaps = {}
     for g in pack['gaps']:
+        assert g['code'] in CONTEXT_GAPS
         gaps.setdefault(g['id'], []).append(g['code'])
     # Sem citação inteira não há conteúdo, só a lacuna; ausente, apagado e sem concessão são iguais.
     assert gaps['init-alpha-two'] == ['citation.incomplete'] and 'init-alpha-two' not in items
@@ -129,6 +130,19 @@ def test_context_s2_uncited_and_withheld_items_pull_no_parents(connection):
     pack = BrainStore(connection, PERSON).query(context(['init-alpha-two', 'init-beta-secret']))['context']
     assert pack['items'] == [dict(id='init-beta-secret', state='withheld')]
     assert pack['gaps'] == [dict(id='init-alpha-two', code='citation.incomplete'), dict(id='init-beta-secret', code='entity.withheld')]
+
+
+
+def test_context_s2_citation_needs_the_same_shape_the_factory_core_checks(connection):
+    # O contrato já barra isso na ingestão; um corpo corrompido no banco também não vira conteúdo.
+    ids = seed(connection, entity('prod-example'), entity('prod-other'), entity('prod-third'))
+    grant(connection, 'grant-factory', ids, FIELDS)
+    connection.execute("""UPDATE brain_projection SET body=jsonb_set(body,'{source,source_hash}','"not-a-sha256"') WHERE id='prod-other'""")
+    connection.execute("""UPDATE brain_projection SET body=jsonb_set(body,'{source,source_version}','"1"') WHERE id='prod-third'""")
+    pack = BrainStore(connection, PERSON).query(context(ids))['context']
+    assert [i['id'] for i in pack['items']] == ['prod-example']
+    assert [g for g in pack['gaps'] if g['code'] == 'citation.incomplete'] == [
+        dict(id='prod-other', code='citation.incomplete'), dict(id='prod-third', code='citation.incomplete')]
 
 
 def test_context_s3_read_only_snapshot_leaves_every_table_intact(connection):

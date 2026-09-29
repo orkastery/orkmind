@@ -1,6 +1,7 @@
 """D8/D9: PostgreSQL exact projection, transactional inbox/history/receipts/outbox."""
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from importlib import resources
 
@@ -24,8 +25,11 @@ def _kind(id):
 
 
 def _cited(source):
-    """A citation counts only whole; a projected-away or partial source is never content."""
-    return isinstance(source,dict) and all(source.get(k) not in (None,'') for k in CITATION)
+    """A citation counts only whole; a projected-away or partial source is never content.
+    Same test as the factory core applies, so both assembly paths drop the same items."""
+    if not isinstance(source,dict) or any(not isinstance(source.get(k),str) or not source.get(k) for k in CITATION if k!='source_version'):
+        return False
+    return re.fullmatch(r'[a-f0-9]{64}',source['source_hash']) is not None and type(source.get('source_version')) is int
 
 
 class BrainStore:
@@ -185,7 +189,8 @@ class BrainStore:
 
         Needs its own history action (default deny): without it the answer equals an absent entity.
         A deleted entity keeps its trail, the tombstone being its last version; withheld hides it all.
-        Without the source field no version is citable, so the whole reading is refused."""
+        Without the source field no version is citable, so the whole reading is refused. Origin metadata
+        (event, producer, cycle, recorded_at) always comes; body fields, version included, follow the grant."""
         if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != tenant:
             return dict(state='forbidden')
         with self.connection.transaction():
@@ -208,7 +213,8 @@ class BrainStore:
         versions=[]
         for r in rows:
             event=r['event'];cycle=event.get('cycle') or {}
-            versions.append(dict(sequence=r['sequence'],event_id=event['id'],operation=event['operation'],version=r['version'],
+            versions.append(dict(sequence=r['sequence'],event_id=event['id'],operation=event['operation'],
+                version=r['version'] if 'version' in grant['fields'] else None,
                 source=event['source'],producer_id=event['producer_id'],thread_id=cycle.get('thread_id'),phase=cycle.get('phase'),
                 recorded_at=r['recorded_at'].astimezone(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00','Z'),
                 rolled_back=r['rolled_back'],entity=project_fields(r['after_image'],[grant]) if r['after_image'] else None))
