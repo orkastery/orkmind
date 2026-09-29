@@ -180,6 +180,40 @@ class BrainStore:
         if row['state']=='withheld': return dict(state='withheld')
         return dict(state='ok',entity=project_fields(row['body'],[grant]))
 
+    def history(self, tenant, id, limit=100, offset=0):
+        """B4.2/D9-D10: append-only versions of one entity, in sequence order, each with its origin.
+
+        Needs its own history action (default deny): without it the answer equals an absent entity.
+        A deleted entity keeps its trail, the tombstone being its last version; withheld hides it all.
+        Without the source field no version is citable, so the whole reading is refused."""
+        if not isinstance(self.principal,Principal) or not self.principal.authenticated or self.principal.kind != 'human' or self.principal.tenant_id != tenant:
+            return dict(state='forbidden')
+        with self.connection.transaction():
+            self.connection.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+            self.fault('history-snapshot')
+            row=self.connection.execute('SELECT * FROM brain_projection WHERE tenant_id=%s AND id=%s',(tenant,id)).fetchone()
+            if not row: return dict(state='unknown')
+            try: grant=self._authorize(dict(tenant_id=tenant,aggregate_id=id,acl_ref=row['acl_ref'],source=dict(instance=row['source_instance'])),'history')
+            except PermissionError: return dict(state='unknown')
+            if row['state']=='withheld': return dict(state='withheld')
+            if 'source' not in grant['fields']: return dict(state='forbidden',error='brain.history.fields-forbidden')
+            count=self.connection.execute('SELECT count(*) AS n FROM brain_history WHERE tenant_id=%s AND aggregate_id=%s',(tenant,id)).fetchone()['n']
+            rows=self.connection.execute("""SELECT i.sequence, i.event, h.after_image, h.recorded_at,
+                (r.body->>'materialized_version')::bigint AS version, b.event_id IS NOT NULL AS rolled_back
+              FROM brain_history h JOIN brain_inbox i ON i.tenant_id=h.tenant_id AND i.event_id=h.event_id
+              LEFT JOIN brain_receipts r ON r.tenant_id=h.tenant_id AND r.event_id=h.event_id AND r.stage='materialized'
+              LEFT JOIN brain_rolled_back_events b ON b.tenant_id=h.tenant_id AND b.event_id=h.event_id
+              WHERE h.tenant_id=%s AND h.aggregate_id=%s ORDER BY i.sequence, i.event_id LIMIT %s OFFSET %s""",
+                (tenant,id,limit,offset)).fetchall()
+        versions=[]
+        for r in rows:
+            event=r['event'];cycle=event.get('cycle') or {}
+            versions.append(dict(sequence=r['sequence'],event_id=event['id'],operation=event['operation'],version=r['version'],
+                source=event['source'],producer_id=event['producer_id'],thread_id=cycle.get('thread_id'),phase=cycle.get('phase'),
+                recorded_at=r['recorded_at'].astimezone(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00','Z'),
+                rolled_back=r['rolled_back'],entity=project_fields(r['after_image'],[grant]) if r['after_image'] else None))
+        return dict(state='ok',id=id,active=row['state']=='active',count=count,versions=versions)
+
     def head(self, tenant, id):
         """Minimal authenticated producer head used to join migration and capture."""
         row=self.connection.execute('SELECT * FROM brain_projection WHERE tenant_id=%s AND id=%s',(tenant,id)).fetchone()
