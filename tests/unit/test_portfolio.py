@@ -22,7 +22,7 @@ async def test_catalog_preserves_hierarchy_and_multi_workspace() -> None:
         id="proj-maestro-workspace",
         title="Maestro Workspace",
         product_id=product.id,
-        workspace_ids=["orkastery", "orkmind", "orkmind-web"],
+        workspace_ids=["orkastery", "orkmind", "site"],
     )
     initiative = Initiative(
         id="init-portfolio-ontology",
@@ -37,7 +37,7 @@ async def test_catalog_preserves_hierarchy_and_multi_workspace() -> None:
     projects = await catalog.list("project", product.id)
     initiatives = await catalog.list("initiative", project.id)
     assert [item.id for item in projects] == [project.id]
-    assert projects[0].metadata["workspace_ids"] == ["orkastery", "orkmind", "orkmind-web"]
+    assert projects[0].metadata["workspace_ids"] == ["orkastery", "orkmind", "site"]
     assert [item.id for item in initiatives] == [initiative.id]
     assert initiatives[0].parent_id == project.id
 
