@@ -408,6 +408,40 @@ Use sempre `MemoryScopeFilter.for_user(user_context, ...)`. Passar
 > vale tanto quanto a integração for fiel em montar o `UserContext` a partir do
 > canal autenticado.
 
+### Escrita em nome de uma pessoa
+
+A ingestão de sistema (vault, fila, CLI) não tem dono e grava o que mandarem.
+Quando a escrita vem de uma pessoa — uma tela, um canal — passe o escopo dela
+como `writer`:
+
+```python
+escopo = MemoryScopeFilter.for_user(user_context)
+await memory.ingest_document(pedido, writer=escopo)
+await memory.ingest_bytes(conteudo, "atas/Ata.md", source="upload:atas/Ata.md",
+                          ingested_by=user_context.user_id, writer=escopo)
+```
+
+A regra é a da leitura: **só grava o que conseguiria ler.**
+
+- Classificação acima do papel, ou em departamento que a pessoa não lê, levanta
+  `ClassificationOutOfReachError` antes de fatiar ou chamar embedding.
+- Slug de documento que ela não lê levanta `SlugUnavailableError`, mesmo que o
+  documento esteja aposentado. A recusa diz só que o nome está em uso; nada do
+  documento que o ocupa.
+- A deduplicação por conteúdo só olha o que ela alcança. Conteúdo idêntico a um
+  documento sigiloso vira documento próprio: apontar para lá entregaria o slug
+  dele, e recusar deixaria a pessoa sem o próprio documento.
+- Quem lê um documento pode atualizá-lo. Cada atualização é uma revisão nova,
+  com `ingested_by` registrando quem foi.
+
+As duas recusas herdam de `WriteOutOfScopeError`. A condição não é uma segunda
+regra: `classification_reach_sql` aplica a mesma `document_scope_clause` a uma
+linha montada com a classificação pedida.
+
+`suggest_documents(texto, escopo)` alimenta o autocompletar de `[[link]]`: só o
+que o escopo vê, começo do slug primeiro, e cada item traz `link`, o texto que
+entre colchetes resolve para aquele documento.
+
 ## Servidor MCP
 
 ```bash
